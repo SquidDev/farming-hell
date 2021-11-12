@@ -209,7 +209,7 @@ const SortableHeader: FunctionComponent<{ column: Column, sort: Sorting, setSort
   return <th scope="col" className="py-4 px-2" aria-sort={sort?.column === column ? (sort.descending ? "descending" : "ascending") : "none"}>
     <button type="button" className="font-bold hover:text-gray-700" onClick={callback}>
       {children}
-      <span role="img" className="w-6 inline-block">{sort?.column === column && (sort.descending ? "▲" : "▼")}</span>
+      <span role="img" className="w-6 inline-block">{sort?.column === column && (sort.descending ? "▼" : "▲")}</span>
     </button>
   </th>;
 };
