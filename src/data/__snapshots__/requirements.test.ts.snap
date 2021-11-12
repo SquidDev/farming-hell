@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Ascension defaults to level 0 1`] = `
+Object {
+  "exp": 0,
+  "expBonus": 0,
+  "items": Map {
+    7001 => 17,
+    6512 => 18,
+    7101 => 17,
+    6503 => 29,
+    6501 => 12,
+    6506 => 5,
+  },
+  "qp": 4400000,
+}
+`;
+
+exports[`Computes ascension materials 1`] = `
+Object {
+  "exp": 0,
+  "expBonus": 0,
+  "items": Map {
+    7001 => 17,
+    6512 => 18,
+    7101 => 17,
+    6503 => 29,
+    6501 => 12,
+    6506 => 5,
+  },
+  "qp": 4400000,
+}
+`;
+
+exports[`Computes grailing materials 1`] = `
+Object {
+  "exp": 437,
+  "expBonus": 364,
+  "items": Map {
+    7101 => 12,
+    6501 => 8,
+    6506 => 5,
+    7999 => 5,
+  },
+  "qp": 58000000,
+}
+`;
+
+exports[`Computes levelling materials 1`] = `
+Object {
+  "exp": 450,
+  "expBonus": 375,
+  "items": Map {
+    7001 => 17,
+    6512 => 18,
+    7101 => 17,
+    6503 => 29,
+    6501 => 12,
+    6506 => 5,
+  },
+  "qp": 4400000,
+}
+`;
+
+exports[`Computes skill materials 1`] = `
+Object {
+  "exp": 0,
+  "expBonus": 0,
+  "items": Map {
+    6001 => 17,
+    6101 => 17,
+    6503 => 44,
+    6201 => 17,
+    6512 => 36,
+    6507 => 15,
+    6506 => 10,
+    6999 => 1,
+  },
+  "qp": 54400000,
+}
+`;
+
+exports[`Level defaults to 1 1`] = `
+Object {
+  "exp": 0,
+  "expBonus": 0,
+  "items": Map {},
+  "qp": 0,
+}
+`;
+
+exports[`Skills defaults to level 1 1`] = `
+Object {
+  "exp": 0,
+  "expBonus": 0,
+  "items": Map {
+    6001 => 17,
+    6101 => 17,
+    6503 => 44,
+    6201 => 17,
+    6512 => 36,
+    6507 => 15,
+    6506 => 10,
+    6999 => 1,
+  },
+  "qp": 54400000,
+}
+`;

@@ -1,0 +1,33 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+        cache: 'npm'
+
+    - name: Cache FGO data
+      uses: actions/cache@v2
+      with:
+        path: _build/data
+        key: fgo-data
+
+    - name: Setup node.js
+      run: npm ci
+
+    - name: Build node
+      run: npm run -s build
+
+    - name: Test
+      run: npm run -s test
+
+    - name: Lint
+      run: npm run -s lint
