@@ -265,7 +265,7 @@ const ServantFilter: FunctionComponent<{ store: Store }> = observer(function Ser
       <div className="flex justify-between flex-col sm:flex-row gap-3 p-6 lg:p-0 lg:py-4 container mx-auto">
         <Checkbox name="maxed">Include maxed servants?</Checkbox>
 
-        <fieldset className="flex gap-3">
+        <fieldset className="flex gap-3 flex-wrap">
           {[Priority.High, Priority.Medium, Priority.Low, Priority.Unsummoned]
             .map(x => <Checkbox key={x} name={`priority.${x}`}>{x}</Checkbox>)}
           <SubmitOnChange formik={form} />

@@ -24,6 +24,9 @@ const convertRangedMap = <T, U>(object: { [key: string]: T }, start: number, end
   return out;
 };
 
+// Individuality ids which are treated as "boring" and so don't count towards our "is event item" heuristic.
+const boringIndividuality = new Set<number>([10085]);
+
 /**
  * Merges and converts data into a more suitable format.
  */
@@ -52,7 +55,7 @@ class Converter {
   public addItem(item: AtlasItem, alwaysDisplay: boolean | undefined = undefined): void {
     this.itemMap.set(item.id, {
       id: item.id, name: item.name.trim(), icon: item.icon, background: item.background, priority: item.priority,
-      alwaysDisplay: alwaysDisplay ?? item.individuality.length === 0, // individuality appears to only be set for event items.
+      alwaysDisplay: alwaysDisplay ?? item.individuality.every(x => boringIndividuality.has(x.id)), // individuality appears to only be set for event items.
       events: [],
       drops: [],
     });
