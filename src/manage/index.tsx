@@ -274,14 +274,13 @@ const ServantFilter: FunctionComponent<{ store: Store }> = observer(function Ser
     }</Formik>;
 });
 
-const NewServantPrompt : FunctionComponent<{ openDialogue: (r: JSX.Element) => void}> = ({openDialogue}) => <div>
-  <div>
+const NewServantPrompt : FunctionComponent<{ openDialogue: (r: JSX.Element) => void}> = ({openDialogue}) =>
+  <div data-filter>
     <p>
       It looks like you don&apos;t have any servants! Press the plus button to add one, or
       see <LinkButton onClick={() => openDialogue(<Instructions />)}>the instructions</LinkButton> for more details.
     </p>
-  </div>
-</div>;
+  </div>;
 
 const ServantInputs: FunctionComponent<{ store: Store, openDialogue: (r: JSX.Element) => void }> = observer(function ServantInputs({ store, openDialogue }) {
   const move = useMemo(() => action<(event: SortableEvent) => void>(event => {
