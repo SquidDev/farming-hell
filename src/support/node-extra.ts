@@ -25,8 +25,12 @@ export const getAsString = (url: string): Promise<string> => new Promise((resolv
   }
 
   const builder = new StringDecoder("utf-8");
-  result.on("data", chunk => builder.write(chunk as Buffer));
-  result.on("end", () => resolve(builder.toString()));
+  let body = "";
+  result.on("data", chunk => body += builder.write(chunk as Buffer));
+  result.on("end", () => {
+    body += builder.end();
+    resolve(body);
+  });
 }).on("error", e => reject(e)));
 
 /** Download a remote URL and save it to a file. This skips downloading if the file already exists, unless "force" is passed. */
