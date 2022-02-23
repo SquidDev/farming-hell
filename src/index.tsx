@@ -8,9 +8,11 @@ import { Store, artoriaPendragon, localStore } from "./store";
 import RequirementTable from "./items/RequirementTable";
 import { Icon, classNames } from "./support/utils";
 import servantDataUrl from "../_build/data/dump.json";
-import { pickAndLoadFromJson, saveToCsv, saveToJson } from "./store/save";
 import { About, Instructions } from "./about";
 import WrappedDialog from "./support/dialog";
+import { read as readJson, write as writeJson } from "./store/formats/json";
+import { write as writeCsv } from "./store/formats/csv";
+import { loadFromFile, storeToFile } from "./import";
 
 import "./styles.css";
 
@@ -70,11 +72,11 @@ const MainControl: FunctionComponent<{ store: Store }> = ({ store }) => {
 
       <div className="flex lg:flex-col items-start gap-2">
         <MenuWrapper title="Import">
-          <Menu.Item onClick={() => pickAndLoadFromJson(store)}>{({ active }) => <MenuItem active={active}>Load from JSON</MenuItem>}</Menu.Item>
+          <Menu.Item onClick={() => loadFromFile(store, readJson, "application/json")}>{({ active }) => <MenuItem active={active}>Load from JSON</MenuItem>}</Menu.Item>
         </MenuWrapper>
         <MenuWrapper title="Export">
-          <Menu.Item onClick={() => saveToJson(store)}>{({ active }) => <MenuItem active={active}>Save as JSON</MenuItem>}</Menu.Item>
-          <Menu.Item onClick={() => saveToCsv(store)}>{({ active }) => <MenuItem active={active}>Save as CSV</MenuItem>}</Menu.Item>
+          <Menu.Item onClick={() => storeToFile(store, writeJson, "fgo-planner.json", "application/json")}>{({ active }) => <MenuItem active={active}>Save as JSON</MenuItem>}</Menu.Item>
+          <Menu.Item onClick={() => storeToFile(store, writeCsv, "fgo-planner.csv", "text/csv")}>{({ active }) => <MenuItem active={active}>Save as CSV</MenuItem>}</Menu.Item>
         </MenuWrapper>
         <MenuWrapper title="Help">
           <Menu.Item onClick={() => openDialogue(<About />)}>{({ active }) => <MenuItem active={active}>About</MenuItem>}</Menu.Item>

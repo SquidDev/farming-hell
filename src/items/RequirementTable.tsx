@@ -14,7 +14,7 @@ import { Input, SubmitOnChange } from "../support/input";
 
 type OwnedItem = { count?: number }
 
-const ownedItem: yup.SchemaOf<OwnedItem> = yup.object().shape({
+const ownedItem: yup.Schema<OwnedItem> = yup.object().shape({
   count: yup.number().min(0, "Must be a positive number").integer(),
 });
 
@@ -148,7 +148,7 @@ const RequiredItem: FunctionComponent<{
   return <Formik
     initialValues={{ count: owned }}
     onSubmit={action<(f: OwnedItem) => void>(values => {
-      const { count } = ownedItem.validateSync(values) as OwnedItem;
+      const { count } = ownedItem.validateSync(values) ;
       if (count === undefined) {
         store.ownedItems.delete(item.id);
       } else {

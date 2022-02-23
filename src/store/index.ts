@@ -3,9 +3,9 @@ import { v4 as uuidV4 } from "uuid";
 
 import { DataDump, Filters, GameEvent, GrailCosts, Id, IdMap, Item, OwnedServant, Priority, Servant, makeId } from "../data";
 import { Requirements, addServantRequirements, newRequirements } from "../data/requirements";
-import { loadFromLocalStorage, saveToLocalStorage } from "./save";
 import { defaultFilters } from "./filter";
 import { expId, qpId } from "../data/constants";
+import { read, write } from "./formats/json";
 
 
 if (process.env.NODE_ENV === "development") {
@@ -125,14 +125,15 @@ export const localStore = (data: DataDump): Store => {
   const store = new Store(data);
 
   try {
-    loadFromLocalStorage(store);
+    const servantData = window.localStorage.getItem("servants");
+    if (servantData) read(store, servantData);
   } catch (e) {
     console.error("Cannot load from local storage", e);
   }
 
   autorun(() => {
     try {
-      saveToLocalStorage(store);
+      window.localStorage.setItem("servants", write(store, true));
     } catch (e) {
       console.error("Cannot save to local storage", e);
     }
