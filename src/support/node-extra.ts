@@ -1,4 +1,5 @@
-import { Agent, get as httpGet } from "https";
+import { Agent as HttpsAgent, get as httpsGet } from "https";
+import { ClientRequest, Agent as HttpAgent, IncomingMessage, get as httpGet } from "http";
 import { promises as fs } from "fs";
 import { StringDecoder } from "string_decoder";
 import { spawn } from "child_process";
@@ -13,12 +14,16 @@ export const fileExists = async (path: string): Promise<boolean> => {
   }
 };
 
-const agent = new Agent({
-  keepAlive: true,
-});
+const httpAgent = new HttpAgent({ keepAlive: true });
+const httpsAgent = new HttpsAgent({ keepAlive: true });
+
+const get = (url: string | URL, callback?: (res: IncomingMessage) => void): ClientRequest => {
+  const isHttps = url instanceof URL ? url.protocol === "https" : url.startsWith("https://");
+  return isHttps ? httpsGet(url, { agent: httpsAgent }, callback) : httpGet(url, { agent: httpAgent }, callback);
+};
 
 /** Download a remote URL and return it as a string. */
-export const getAsString = (url: string): Promise<string> => new Promise((resolve, reject) => httpGet(url, { agent }, result => {
+export const getAsString = (url: string): Promise<string> => new Promise((resolve, reject) => get(url, result => {
   if (result.statusCode !== 200) {
     reject(new Error(`Expected ${url} to return 200, got ${result.statusCode ?? "error"}`));
     return;
@@ -44,7 +49,7 @@ export const getAsFile = async (url: string, path: string, force = false): Promi
       reject(e);
     };
 
-    httpGet(url, { agent }, result => {
+    get(url, result => {
       if (result.statusCode !== 200) {
         reject(new Error(`Expected ${url} to return 200, got ${result.statusCode ?? "error"}`));
         return;

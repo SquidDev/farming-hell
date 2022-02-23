@@ -3,3 +3,5 @@
 /.eslintcache
 /.vscode
 /node_modules
+/.rollup.cache
+*.tsbuildinfo

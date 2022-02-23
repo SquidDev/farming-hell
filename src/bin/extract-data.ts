@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import { createHash } from "crypto";
+import { VM } from "vm2";
 
 import { TaskQueue, fileExists, getAsFile, getAsString, runCommand, runTasksInParallel } from "../support/node-extra";
 import type { AtlasEvent, AtlasGrailCost, AtlasItem, AtlasServant, EventSummary, War } from "../data/atlas";
@@ -97,6 +98,7 @@ class Converter {
 
     const details: Servant = {
       id: servant.id,
+      webcrowId: servant.collectionNo,
       name,
       rarity: servant.rarity,
       npType: servant.noblePhantasms?.[0].card,
@@ -216,6 +218,62 @@ const addDropData = (
   }
 };
 
+/** Load in the servant DB from FGO Material Simulator and write the resulting IDs. */
+const extractFgoSim = async (): Promise<void> => {
+  const vm = new VM({ eval: false, wasm: false, allowAsync: false, timeout: 500 });
+  vm.run("$ = () => {};");
+  vm.runFile(`${outDir}/fgo_sim.js`);
+  const servants = vm.getGlobal("Servantdb") as Array<{ id: number, text2: string }>;
+  const processedServants = servants.map(x => ({ id: x.id, name: x.text2.replace(/\s+/g, " ") }));
+
+  await fs.writeFile(`${outDir}/fgo_sim.json`, JSON.stringify(processedServants));
+};
+
+/**
+ * Compute FGO Material Simulator ids. These appear to be manually assigned, and so are often inconsistent with FGO's
+ * internal ids, so we need to do some remapping.
+ *
+ * @param servantMap Map of all servants.
+ */
+const recomputeFgoSimIds = (servantMap: IdMap<Servant>): void => {
+  const mapping = new Map<Id<"servant">, number>();
+
+  mapping.set(makeId("servant", 101700), 150); // Musashi
+  mapping.set(makeId("servant", 602500), 151); // First Hassan
+  mapping.set(makeId("servant", 303200), 152); // Ereshkigal
+
+  mapping.set(makeId("servant", 402600), 176); // Ishtar (Rider)
+  mapping.set(makeId("servant", 402700), 177); // Artoria Pendragon Alter (Rider)
+  mapping.set(makeId("servant", 202800), 178); // Helena Blavatsky (Archer)
+  mapping.set(makeId("servant", 302900), 179); // Minamoto-no-Raikou (Lancer)
+
+  mapping.set(makeId("servant", 2500100), 191); // Abigail Williams
+
+  mapping.set(makeId("servant", 403100), 225); // Red Hare
+  mapping.set(makeId("servant", 900600), 227); // Qin Shi Huang
+
+  mapping.set(makeId("servant", 104800), 295); // Karna (Santa)
+  mapping.set(makeId("servant", 304600), 296); // Vritra
+
+  for (const servant of servantMap.values()) {
+    const overwrite = mapping.get(servant.id);
+    if (overwrite !== undefined) {
+      servant.webcrowId = overwrite;
+      continue;
+    }
+
+    // Best if you don't ask.
+    if (servant.webcrowId >= 149) servant.webcrowId--;
+    if (servant.webcrowId >= 153) servant.webcrowId--;
+    if (servant.webcrowId >= 167) servant.webcrowId--;
+    if (servant.webcrowId >= 188) servant.webcrowId--;
+    if (servant.webcrowId >= 192) servant.webcrowId--;
+    if (servant.webcrowId >= 211) servant.webcrowId++;
+    if (servant.webcrowId >= 237) servant.webcrowId--;
+    if (servant.webcrowId >= 329) servant.webcrowId--;
+  }
+};
+
 void (async () => {
   let skipVersionCheck = false, skipImageDownload = false;
   for (let i = 2; i < process.argv.length; i++) {
@@ -250,6 +308,7 @@ void (async () => {
   await getAsFile("https://api.atlasacademy.io/export/JP/basic_event_lang_en.json", `${outDir}/events_jp.json`, isNew);
   await getAsFile("https://api.atlasacademy.io/export/NA/nice_item.json", `${outDir}/items_na.json`, isNew);
   await getAsFile("https://api.atlasacademy.io/export/NA/NiceSvtGrailCost.json", `${outDir}/grail_na.json`, isNew);
+  await getAsFile("http://fgosimulator.webcrow.jp/Material/js/fgos_material.min.js", `${outDir}/fgo_sim.js`, isNew);
 
   const sheetsKey = process.env.SHEETS_KEY;
   if (sheetsKey) {
@@ -304,6 +363,8 @@ void (async () => {
   for (const item of itemMap.values()) {
     tasks.push(async () => { item.icon = await downloadImage(seenImages, item.icon, skipImageDownload); });
   }
+
+  recomputeFgoSimIds(servantMap);
 
   // Download all additional data about events.
   const wars = new Set<Id<"war">>();
@@ -391,6 +452,9 @@ void (async () => {
     addDropData(itemNames, spreadsheet.sheets[0].data[0].rowData, 2);
     addDropData(itemNames, spreadsheet.sheets[0].data[0].rowData, 18);
   }
+
+  // Extract additional data for tests
+  await extractFgoSim();
 
   const result: DataDump = {
     servants: [...servantMap.values()].sort((a, b) => {

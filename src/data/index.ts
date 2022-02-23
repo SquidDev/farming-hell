@@ -52,6 +52,8 @@ export type Servant = {
   skills: Array<Array<Skill>>,
   lvlMax: Array<number>,
   npType?: CardColour,
+
+  webcrowId: number,
 }
 
 /**

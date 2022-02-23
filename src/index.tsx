@@ -13,6 +13,7 @@ import WrappedDialog from "./support/dialog";
 import { read as readJson, write as writeJson } from "./store/formats/json";
 import { write as writeCsv } from "./store/formats/csv";
 import { loadFromFile, storeToFile } from "./import";
+import { Export as ExportWebcrow, Import as ImportWebcrow } from "./import/webcrow";
 
 import "./styles.css";
 
@@ -42,7 +43,7 @@ const MenuItem: FunctionComponent<{ active: boolean }> = ({ active, children, ..
     {...props}
     className={classNames(
       active ? "bg-blue-100" : "bg-white hover:bg-blue-100",
-      "flex w-full p-2"
+      "flex w-full p-2 text-left"
     )}
   >{children}</button>;
 
@@ -73,10 +74,12 @@ const MainControl: FunctionComponent<{ store: Store }> = ({ store }) => {
       <div className="flex lg:flex-col items-start gap-2">
         <MenuWrapper title="Import">
           <Menu.Item onClick={() => loadFromFile(store, readJson, "application/json")}>{({ active }) => <MenuItem active={active}>Load from JSON</MenuItem>}</Menu.Item>
+          <Menu.Item onClick={() => openDialogue(<ImportWebcrow store={store} setOpen={setDialogueOpen} />)}>{({ active }) => <MenuItem active={active}>Import from FGO Material Simulator</MenuItem>}</Menu.Item>
         </MenuWrapper>
         <MenuWrapper title="Export">
           <Menu.Item onClick={() => storeToFile(store, writeJson, "fgo-planner.json", "application/json")}>{({ active }) => <MenuItem active={active}>Save as JSON</MenuItem>}</Menu.Item>
           <Menu.Item onClick={() => storeToFile(store, writeCsv, "fgo-planner.csv", "text/csv")}>{({ active }) => <MenuItem active={active}>Save as CSV</MenuItem>}</Menu.Item>
+          <Menu.Item onClick={() => openDialogue(<ExportWebcrow store={store} setOpen={setDialogueOpen} />)}>{({ active }) => <MenuItem active={active}>Export Servants to FGO Material Simulator</MenuItem>}</Menu.Item>
         </MenuWrapper>
         <MenuWrapper title="Help">
           <Menu.Item onClick={() => openDialogue(<About />)}>{({ active }) => <MenuItem active={active}>About</MenuItem>}</Menu.Item>

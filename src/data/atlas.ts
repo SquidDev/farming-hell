@@ -22,11 +22,12 @@ export type NoblePhantasm = {
 
 /**
  * A servant within the nice_servant.json file. We don't actually use this
- * directly, we convert it to a UsefulServant which information in a more
+ * directly, we convert it to a UsefulServant which holds information in a more
  * accessible way.
  */
 export type AtlasServant = {
   id: Id<"servant">,
+  collectionNo: number,
   name: string,
   type: string,
   rarity: number,
