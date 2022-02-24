@@ -305,7 +305,7 @@ const ServantInputs: FunctionComponent<{ store: Store, openDialogue: (r: JSX.Ele
 
   return <>
     <ServantFilter store={store} />
-    <div className="grid 2xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 2xl:gap-2 p-6 lg:p-0 lg:py-4 container mx-auto" ref={ref}>
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(25em,1fr))] gap-4 p-6 lg:p-0 lg:py-4 container mx-auto" ref={ref}>
       {store.ownedServants.map(s => <ServantInputContainer key={s.uid} servant={s} store={store} />)}
       <NewServantButton store={store} />
       {store.ownedServants.length === 0 && <NewServantPrompt openDialogue={openDialogue} />}
