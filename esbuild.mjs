@@ -169,7 +169,7 @@ const copyPlugin = srcGlob => ({
 
     // Input options
     entryPoints: ['src/index.tsx'],
-    inject: ['./src/react-shim.js'],
+    inject: ['./src/react-shim.mjs'],
     loader: {
       ".json": "file",
       ".png": "file",
