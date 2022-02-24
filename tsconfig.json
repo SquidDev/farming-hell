@@ -5,7 +5,6 @@
     "target": "es6",
     "lib": ["es2015", "dom" ],
     "newLine": "LF",
-    "incremental": true,
 
     // Additional compile options
     // Ideally we'd set noEmitOnError, but this aborts the rolup build.
