@@ -15,6 +15,7 @@ import { Icon, LinkButton, classNames } from "../support/utils";
 import ServantSelect from "./ServantSelect";
 import { getAscensionTarget } from "../data/ascension";
 import { Instructions } from "../about";
+import { isTouch } from "../support/feature-detect";
 
 const priorities: ReactNode = ["High", "Medium", "Low", "Unsummoned"].map(x => <option key={x} value={x}>{x}</option>);
 
@@ -178,6 +179,14 @@ export const ServantInput: FunctionComponent<{ servant: OwnedServant, store: Sto
           <ServantSelect name="id" className="mb-1" servants={store.servantLookup} />
           <Field name="priority" component="select">{priorities}</Field>
         </div>
+
+        {isTouch && <div
+          className={classNames(
+            "h-6 flex items-center justify-center order-first sm:order-last",
+            "text-gray-900 hover:text-gray-600 cursor-grab",
+          )}
+          data-handle="yes"
+        >⣿</div>}
       </div>
 
       <div className="flex flex-col flex-grow">
@@ -297,6 +306,7 @@ const ServantInputs: FunctionComponent<{ store: Store, openDialogue: (r: JSX.Ele
     if (ref.current === null) return undefined;
     const sort = Sortable.create(ref.current, {
       onUpdate: move,
+      handle: isTouch ? "[data-handle]" : undefined,
       filter: (_event, target) => target.getAttribute("data-filter") !== null,
       onMove: event => event.related.getAttribute("data-filter") === null,
     });
@@ -305,7 +315,7 @@ const ServantInputs: FunctionComponent<{ store: Store, openDialogue: (r: JSX.Ele
 
   return <>
     <ServantFilter store={store} />
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(25em,1fr))] gap-4 p-6 lg:p-0 lg:py-4 container mx-auto" ref={ref}>
+    <div className="grid md:grid-cols-[repeat(auto-fit,minmax(25em,1fr))] grid-cols-1 gap-4 p-6 lg:p-0 lg:py-4 container mx-auto" ref={ref}>
       {store.ownedServants.map(s => <ServantInputContainer key={s.uid} servant={s} store={store} />)}
       <NewServantButton store={store} />
       {store.ownedServants.length === 0 && <NewServantPrompt openDialogue={openDialogue} />}

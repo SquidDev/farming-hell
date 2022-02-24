@@ -32,12 +32,15 @@ jest.mock("../support/input", () => {
   };
 });
 
-jest.mock("../items/requirements", () => {
-  return {
-    __esModule: true,
-    ShortServantRequirements: () => createElement("ShortServantRequirements"),
-  };
-});
+jest.mock("../items/requirements", () => ({
+  __esModule: true,
+  ShortServantRequirements: () => createElement("ShortServantRequirements"),
+}));
+
+jest.mock("../support/feature-detect", () => ({
+  __esModule: true,
+  isTouch: false,
+}));
 
 it("renders the empty servant correctly", async () => {
   const [store, servant] = await newStoreAndServant();
