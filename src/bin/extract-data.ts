@@ -11,6 +11,12 @@ import { expId, grailId, qpId } from "../data/constants";
 
 const outDir = "_build/data";
 
+const convertOptRangedMap = <T, U>(object: { [key: string]: T }, start: number, end: number, f: (x: T | undefined) => U): Array<U> => {
+  const out: Array<U> = [];
+  for (let i = start; i <= end; i++) out.push(f(object[i]));
+  return out;
+};
+
 const convertRangedMap = <T, U>(object: { [key: string]: T }, start: number, end: number, f: (x: T) => U): Array<U> => {
   const out: Array<U> = [];
   for (let i = start; i <= end; i++) {
@@ -67,9 +73,8 @@ class Converter {
     return { item: item.id, amount };
   };
 
-  private convertUpgradeRequirements = ({ qp, items }: UpgradeRequirements<AtlasItem>): UpgradeRequirements<Id<"item">> => ({
-    qp, items: items.map(x => this.convertUpgradeItem(x))
-  });
+  private convertUpgradeRequirements = (reqs: UpgradeRequirements<AtlasItem> | undefined): UpgradeRequirements<Id<"item">> =>
+    reqs ? { qp: reqs.qp, items: reqs.items.map(x => this.convertUpgradeItem(x)) } : { qp: 0, items: [] };
 
   public addServant(servant: AtlasServant): void {
     if (servant.type === "enemyCollectionDetail") return;
@@ -105,7 +110,7 @@ class Converter {
 
       // Atlas provides materials in objects. We convert these to arrays.
       ascensions: convertRangedMap(servant.extraAssets.faces.ascension, 1, 4, x => x),
-      skillMaterials: convertRangedMap(servant.skillMaterials, 1, 9, this.convertUpgradeRequirements),
+      skillMaterials: convertOptRangedMap(servant.skillMaterials, 1, 9, this.convertUpgradeRequirements),
       ascensionMaterials:
         Object.keys(servant.ascensionMaterials).length
           ? convertRangedMap(servant.ascensionMaterials, 0, 3, this.convertUpgradeRequirements)
