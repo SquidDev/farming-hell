@@ -186,6 +186,7 @@ const dropNames: { [key: string]: string } = {
   "Moonlit Tiara": "Shining Silver Crown",
   "Shell of Reminiscense": "Shell of Reminiscence",
   "Demon Flame Lantern": "Oni Flame Lantern",
+  "Divine Spirit Particle": "Divine Leyline Spiritron",
 };
 
 const addDropData = (
