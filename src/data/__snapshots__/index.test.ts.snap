@@ -174,7 +174,6 @@ Array [
   "266 => ours=203900:'Florence Nightingale (Santa)' theirs='Nightingale (Santa)'",
   "271 => ours=204000:'Sei Shounagon' theirs='Sei Shonagon'",
   "275 => ours=304200:'Romulus=Quirinus' theirs='Romulus-Quirinus'",
-  "278 => ours=304300:'Elice Utsumi' theirs='Utsumi Erice'",
   "279 => ours=504500:'Artoria Caster' theirs='Artoria Pendragon (Caster)'",
   "280 => ours=2300400:'Sessyoin Kiara' theirs='Sesshoin Kiara (Moon Cancer)'",
   "281 => ours=204200:'Illyasviel von Einzbern' theirs='Illyasviel von Einzbern(Archer)'",
@@ -200,5 +199,10 @@ Array [
   "324 => ours=305000:'Sakamoto Ryouma' theirs='Sakamoto Ryoma'",
   "326 => ours=404300:'Taikoubou' theirs='Tai Gong Wang'",
   "330 => ours=1001100:'Manannán mac Lir (Bazett)' theirs='Manannan mac Lir (Bazett)'",
+  "331 => ours=105300:'Trưng Sisters' theirs=''",
+  "332 => ours=1001200:'Taisui Xingjun' theirs=''",
+  "333 => ours=1001300:'Super Bunyan' theirs=''",
+  "334 => ours=504700:'Daikokuten' theirs=''",
+  "335 => ours=304900:'Mary Anning' theirs=''",
 ]
 `;

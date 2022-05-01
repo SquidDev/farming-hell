@@ -11,6 +11,8 @@ import { expId, grailId, qpId } from "../data/constants";
 
 const outDir = "_build/data";
 
+const enableFgoSim = false;
+
 const convertOptRangedMap = <T, U>(object: { [key: string]: T }, start: number, end: number, f: (x: T | undefined) => U): Array<U> => {
   const out: Array<U> = [];
   for (let i = start; i <= end; i++) out.push(f(object[i]));
@@ -314,7 +316,7 @@ void (async () => {
   await getAsFile("https://api.atlasacademy.io/export/JP/basic_event_lang_en.json", `${outDir}/events_jp.json`, isNew);
   await getAsFile("https://api.atlasacademy.io/export/NA/nice_item.json", `${outDir}/items_na.json`, isNew);
   await getAsFile("https://api.atlasacademy.io/export/NA/NiceSvtGrailCost.json", `${outDir}/grail_na.json`, isNew);
-  await getAsFile("http://fgosimulator.webcrow.jp/Material/js/fgos_material.min.js", `${outDir}/fgo_sim.js`, isNew);
+  if (enableFgoSim) await getAsFile("http://fgosimulator.webcrow.jp/Material/js/fgos_material.min.js", `${outDir}/fgo_sim.js`, isNew);
 
   const sheetsKey = process.env.SHEETS_KEY;
   if (sheetsKey) {
@@ -460,7 +462,7 @@ void (async () => {
   }
 
   // Extract additional data for tests
-  await extractFgoSim();
+  if (enableFgoSim) await extractFgoSim();
 
   const result: DataDump = {
     servants: [...servantMap.values()].sort((a, b) => {

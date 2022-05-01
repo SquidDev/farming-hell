@@ -1,6 +1,7 @@
 import { promises as fs } from "fs";
 
 import { fsStore } from "../test";
+import { fileExists } from "../support/node-extra";
 
 const makeLookup = <K, V>(objs: Array<V>, keyFn: (o: V) => K): Map<K, V> => {
   const out = new Map<K, V>();
@@ -20,7 +21,10 @@ test("Includes webcrow IDs", async () => {
 
   const servants = [...store.servants].sort((a, b) => a.webcrowId - b.webcrowId);
 
-  const fgoSimServants = JSON.parse(await fs.readFile("_build/data/fgo_sim.json", "utf-8")) as Array<{ id: number, name: string }>;
+  const fgoContents = await fileExists("_build/data/fgo_sim.json")
+    ? await fs.readFile("_build/data/fgo_sim.json", "utf-8")
+    : await fs.readFile("data/fgo_sim.json", "utf-8");
+  const fgoSimServants = JSON.parse(fgoContents) as Array<{ id: number, name: string }>;
   const fgoSimById = makeLookup(fgoSimServants, x => x.id);
 
   const different: Array<string> = [];
