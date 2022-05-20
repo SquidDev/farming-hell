@@ -76,6 +76,7 @@ export const addSplitServantRequirements = (
   store: Store, servant: OwnedServant, details: Servant
 ): void => {
   for (const skill of servant.skills) addRequirements(skillReqs, skill, 1, details.skillMaterials);
+  for (const skill of servant.appendSkills) addRequirements(skillReqs, skill, 0, details.appendSkillMaterials);
   if (details.ascensionMaterials) {
     addRequirements(ascensionReqs, getAscensionTargetFast(details, servant), 0, details.ascensionMaterials);
   }

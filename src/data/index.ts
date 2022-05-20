@@ -101,6 +101,7 @@ export type OwnedServant = {
   level: Target,
   ascension: Target,
   skills: Array<Target>,
+  appendSkills: Array<Target>,
 }
 
 export type Filters = {

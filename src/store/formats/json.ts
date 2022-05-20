@@ -13,20 +13,21 @@ import { Filters, Id, OwnedServant, makeId } from "../../data";
 import { qpId } from "../../data/constants";
 import { defaultFilters } from "../filter";
 
+type PartialOwnedServant = Omit<OwnedServant, "appendSkills"> & Partial<Pick<OwnedServant, "appendSkills">>;
 
 type LatestSchema = {
   version: 1,
-  servants: Array<OwnedServant>,
+  servants: Array<PartialOwnedServant>,
   items?: Array<[Id<"item">, number]>,
   filters?: Filters,
 };
 
 type Schemas
-  = Array<OwnedServant>
+  = Array<PartialOwnedServant>
   | LatestSchema;
 
 const readImpl = (store: Store, data: Schemas): void => {
-  let servants: Array<OwnedServant> = [];
+  let servants: Array<PartialOwnedServant> = [];
   const items: Map<Id<"item">, number> = new Map();
   let filters: Filters = defaultFilters;
 
@@ -42,6 +43,11 @@ const readImpl = (store: Store, data: Schemas): void => {
     throw new Error("Failed to parse this data.");
   }
 
+  const fixedServants = servants.map(servant => {
+    servant.appendSkills ??= [{}, {}, {}];
+    return servant as OwnedServant;
+  });
+
   // Convert our legacy QP item (id=5) to the current one (id=1).
   const oldQpId = makeId("item", 5);
   const qp = items.get(oldQpId);
@@ -51,7 +57,7 @@ const readImpl = (store: Store, data: Schemas): void => {
   }
 
   runInAction(() => {
-    store.ownedServants = servants;
+    store.ownedServants = fixedServants;
     store.ownedItems = items;
     store.filters = filters;
   });

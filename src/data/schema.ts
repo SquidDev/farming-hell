@@ -2,8 +2,6 @@ import * as yup from "yup";
 
 import type { Id, OwnedServant, Priority, Target } from ".";
 
-// Disable all the "any" linters because yup doesn't really do types.
-
 const target = (label: string, min: number, max: number): yup.Schema<Target> => {
   const range = `${label} must be between ${min} and ${max}`;
   const row = yup.number().label(label).typeError(`${label} must be a number`)
@@ -29,4 +27,5 @@ export const ownedServant: yup.Schema<Omit<OwnedServant, "uid">> = yup.object().
   level: target("Level", 1, 120),
   ascension: target("Ascension", 0, 4),
   skills: yup.array().of(target("Skill", 1, 10)).length(3).required(),
+  appendSkills: yup.array().of(target("Append Skill", 0, 10)).length(3).required(),
 });

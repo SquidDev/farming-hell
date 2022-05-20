@@ -73,7 +73,7 @@ class Converter {
   private convertItemId = (item: AtlasItem): Id<"item"> => {
     if (!this.itemMap.has(item.id)) this.addItem(item);
     return item.id;
-  }
+  };
 
   private convertUpgradeItem = ({ item, amount }: UpgradeItem<AtlasItem>): UpgradeItem<Id<"item">> =>
     ({ item: this.convertItemId(item), amount });
@@ -97,7 +97,6 @@ class Converter {
     const seenSkills = new Set<Id<"skill">>();
 
     const appendSkills: Array<Array<Skill>> = [[], [], []];
-    const appendSkillMaterials = convertOptRangedMap(jpServant.appendSkillMaterials, 1, 9, this.convertUpgradeRequirements);
 
     if (naServant) {
       for (const skill of naServant.skills) {
@@ -125,7 +124,10 @@ class Converter {
       seenSkills.add(skill.id);
     }
 
-    // const appendSkills = naServant?.appendPassive ?? na
+    const appendSkillMaterials = convertOptRangedMap(jpServant.appendSkillMaterials, 1, 9, this.convertUpgradeRequirements);
+    for (const upgrade of jpServant.appendPassive[0].unlockMaterials) {
+      appendSkillMaterials.unshift({ items: [this.convertUpgradeItem(upgrade)], qp: 0 });
+    }
 
     const details: Servant = {
       id: jpServant.id,

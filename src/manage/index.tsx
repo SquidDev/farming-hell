@@ -19,28 +19,29 @@ import { isTouch } from "../support/feature-detect";
 
 const priorities: ReactNode = ["High", "Medium", "Low", "Unsummoned"].map(x => <option key={x} value={x}>{x}</option>);
 
-const defaultTarget: Target = {};
+const placeholderZero: Target = { current: 0 };
+const placeholderOne: Target = { current: 1 };
 
 const undefinedToString = (x: number | undefined): string | undefined => x === undefined ? undefined : `${x}`;
 
-const TargetInput: FunctionComponent<{ path: string, label?: string, children: ReactNode, successStyle: string, inferred?: Target }> = ({ path, label, children, successStyle, inferred = defaultTarget }) => {
+const TargetInput: FunctionComponent<{ path: string, label?: string, children: ReactNode, successStyle: string, placeholder: Target }> = ({ path, label, children, successStyle, placeholder }) => {
   const [{ value: current }, _meta, _helpers] = useField<string>(`${path}.current`);
   const [{ value: target }, _meta2, _helpers2] = useField<string>(`${path}.target`);
 
   // Behold this ungodly mess of coercions.
-  const { current: inferredCurrent, target: inferredTarget } = inferred;
-  const effectiveCurrent = current || (inferredCurrent === undefined ? "" : `${inferredCurrent}`);
-  const effectiveTarget = target || (inferredTarget === undefined ? "" : `${inferredTarget}`);
+  const { current: placeholderCurrent, target: placeholderTarget } = placeholder;
+  const effectiveCurrent = current || (placeholderCurrent === undefined ? "" : `${placeholderCurrent}`);
+  const effectiveTarget = target || (placeholderTarget === undefined ? "" : `${placeholderTarget}`);
   const isOk = effectiveCurrent && effectiveTarget && effectiveCurrent === effectiveTarget;
 
   return <div className={classNames(isOk ? successStyle : undefined, "rounded-md")}>
     <div className="flex flex-col p-2">
       <span className="text-xl"> {label} </span>
       <div className="flex">
-        <Input name={`${path}.current`} className="w-12 p-1 rounded-l-lg" type="text" inputMode="numeric" pattern="[0-9]*" placeholder={undefinedToString(inferred.current)}>
+        <Input name={`${path}.current`} className="w-12 p-1 rounded-l-lg" type="text" inputMode="numeric" pattern="[0-9]*" placeholder={undefinedToString(placeholder.current)}>
           {children}
         </Input>
-        <Input name={`${path}.target`} className="w-12 p-1 rounded-r-lg" type="text" inputMode="numeric" pattern="[0-9]*" placeholder={undefinedToString(inferred.target)}>
+        <Input name={`${path}.target`} className="w-12 p-1 rounded-r-lg" type="text" inputMode="numeric" pattern="[0-9]*" placeholder={undefinedToString(placeholder.target)}>
           {children}
         </Input>
       </div>
@@ -48,8 +49,8 @@ const TargetInput: FunctionComponent<{ path: string, label?: string, children: R
   </div>;
 };
 
-const SkillInput: FunctionComponent<{ idx: number, skill?: Array<Skill>, successStyle: string }> = ({ idx, skill, successStyle }) => {
-  return <TargetInput path={`skills[${idx}]`} successStyle={successStyle}>
+const SkillInput: FunctionComponent<{ path: string, skill?: Array<Skill>, successStyle: string, placeholder: Target }> = ({ path, skill, successStyle, placeholder }) => {
+  return <TargetInput path={path} successStyle={successStyle} placeholder={placeholder}>
     {skill
       ? skill.map(skill => <div key={skill.id}>
         <h3 className="text-lg font-semibold">{skill.name}</h3>
@@ -70,8 +71,8 @@ const ascensions: Array<{ lvl: number, label: string }> = [
   { lvl: 4, label: "Max" },
 ];
 
-const LevelOrAscensionInput: FunctionComponent<{ label: string, servant?: Servant, path: string, successStyle: string, inferred?: Target }> = ({ label, servant, path, successStyle, inferred }) =>
-  <TargetInput label={label} path={path} successStyle={successStyle} inferred={inferred}>
+const LevelOrAscensionInput: FunctionComponent<{ label: string, servant?: Servant, path: string, successStyle: string, placeholder: Target }> = ({ label, servant, path, successStyle, placeholder }) =>
+  <TargetInput label={label} path={path} successStyle={successStyle} placeholder={placeholder}>
     <table>
       <thead>
         <tr className="border-b border-white font-semibold">
@@ -109,6 +110,7 @@ type ServantData = {
   level: TargetData,
   ascension: TargetData,
   skills: Array<TargetData>,
+  appendSkills: Array<TargetData>,
 }
 
 const DeleteDialogue: FunctionComponent<{ isOpen: boolean, setOpen: (open: boolean) => void, servant: OwnedServant, store: Store }> = observer(function DeleteDialogue({ isOpen, setOpen, servant, store }) {
@@ -144,11 +146,12 @@ export const ServantInput: FunctionComponent<{ servant: OwnedServant, store: Sto
     level: { current: `${storeServant.level.current ?? ""}`, target: `${storeServant.level.target ?? ""}` },
     ascension: { current: `${storeServant.ascension.current ?? ""}`, target: `${storeServant.ascension.target ?? ""}` },
     skills: storeServant.skills.map(x => ({ current: `${x.current ?? ""}`, target: `${x.target ?? ""}` })),
+    appendSkills: storeServant.appendSkills.map(x => ({ current: `${x.current ?? ""}`, target: `${x.target ?? ""}` })),
   }), [storeServant]);
 
   const onSubmit = useMemo(() => action<(f: ServantData) => void>(values => {
     const updatedServant = ownedServant.validateSync(values) as OwnedServant;
-    for (const k of (["id", "priority", "level", "ascension", "skills"] as Array<keyof OwnedServant>)) {
+    for (const k of (["id", "priority", "level", "ascension", "skills", "appendSkills"] as Array<keyof OwnedServant>)) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
       (storeServant as any)[k] = updatedServant[k]; // TODO: Do this in a more safe manner!
     }
@@ -159,7 +162,7 @@ export const ServantInput: FunctionComponent<{ servant: OwnedServant, store: Sto
   const servantDetails = store.servantLookup.get(storeServant.id);
   const npStyle = npStyles[servantDetails?.npType ?? "arts"];
 
-  const inferredAscension = servantDetails !== undefined ? getAscensionTarget(servantDetails, storeServant) : undefined;
+  const inferredAscension = servantDetails !== undefined ? getAscensionTarget(servantDetails, storeServant) : placeholderOne;
   const ascension = servantDetails && inferredAscension && (inferredAscension.current
     && servantDetails.ascensions[ascensionMapping[inferredAscension.current]]
     || servantDetails.ascensions[0]);
@@ -191,18 +194,27 @@ export const ServantInput: FunctionComponent<{ servant: OwnedServant, store: Sto
 
       <div className="flex flex-col flex-grow">
         <div className="flex flex-row flex-wrap mt-2 gap-2 2xl:gap-1">
-          <LevelOrAscensionInput successStyle={npStyle.success} label="Level" path="level" servant={servantDetails} />
+          <LevelOrAscensionInput successStyle={npStyle.success} label="Level" path="level" servant={servantDetails} placeholder={placeholderOne} />
           <LevelOrAscensionInput
             successStyle={npStyle.success} label="Ascension" path="ascension" servant={servantDetails}
-            inferred={inferredAscension} />
+            placeholder={inferredAscension} />
         </div>
 
         <div className="flex flex-col mt-2">
           <span className="text-xl px-2"> Skills </span>
           <div className="flex flex-wrap gap-2 2xl:gap-1">
-            <SkillInput successStyle={npStyle.success} idx={0} skill={servantDetails?.skills[0]} />
-            <SkillInput successStyle={npStyle.success} idx={1} skill={servantDetails?.skills[1]} />
-            <SkillInput successStyle={npStyle.success} idx={2} skill={servantDetails?.skills[2]} />
+            <SkillInput successStyle={npStyle.success} path={"skills[0]"} skill={servantDetails?.skills[0]} placeholder={placeholderOne} />
+            <SkillInput successStyle={npStyle.success} path={"skills[1]"} skill={servantDetails?.skills[1]} placeholder={placeholderOne} />
+            <SkillInput successStyle={npStyle.success} path={"skills[2]"} skill={servantDetails?.skills[2]} placeholder={placeholderOne} />
+          </div>
+        </div>
+
+        <div className="flex flex-col mt-2">
+          <span className="text-xl px-2"> Append Skills </span>
+          <div className="flex flex-wrap gap-2 2xl:gap-1">
+            <SkillInput successStyle={npStyle.success} path={"appendSkills[0]"} skill={servantDetails?.appendSkills[0]} placeholder={placeholderZero} />
+            <SkillInput successStyle={npStyle.success} path={"appendSkills[1]"} skill={servantDetails?.appendSkills[1]} placeholder={placeholderZero} />
+            <SkillInput successStyle={npStyle.success} path={"appendSkills[2]"} skill={servantDetails?.appendSkills[2]} placeholder={placeholderZero} />
           </div>
         </div>
 
@@ -283,7 +295,7 @@ const ServantFilter: FunctionComponent<{ store: Store }> = observer(function Ser
     }</Formik>;
 });
 
-const NewServantPrompt : FunctionComponent<{ openDialogue: (r: JSX.Element) => void}> = ({openDialogue}) =>
+const NewServantPrompt: FunctionComponent<{ openDialogue: (r: JSX.Element) => void }> = ({ openDialogue }) =>
   <div data-filter>
     <p>
       It looks like you don&apos;t have any servants! Press the plus button to add one, or

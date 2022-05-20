@@ -5,7 +5,7 @@
  * format.
  */
 
-import type { CardColour, Id, Item as Item_, Skill, UpgradeRequirements } from "./common";
+import type { CardColour, Id, Item as Item_, Skill, UpgradeItem, UpgradeRequirements } from "./common";
 
 
 export type AtlasItem = Item_ & {
@@ -23,7 +23,7 @@ export type NoblePhantasm = {
 export type AppendSkill = {
   num: number,
   skill: Skill,
-  unlockMaterials: Array<UpgradeRequirements<AtlasItem>>,
+  unlockMaterials: Array<UpgradeItem<AtlasItem>>,
 }
 
 /**

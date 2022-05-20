@@ -115,6 +115,7 @@ export const newServant = (id?: Id<"servant">): OwnedServant => ({
   level: {},
   ascension: {},
   skills: [{}, {}, {}],
+  appendSkills: [{}, {}, {}],
 });
 
 /**
