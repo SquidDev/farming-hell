@@ -44,14 +44,30 @@ const addExpRequirements = (requirements: Requirements, store: Store, servant: O
 
   const maxLevel = details.lvlMax[4];
   if (target > maxLevel) {
-    let grails = 0;
-    for (const grail of store.grailCosts[details.rarity]) {
-      requirements.qp += grail.qp;
-      grails++;
-      if (maxLevel + grail.add >= target) break;
+    const grailCosts = store.grailCosts[details.rarity];
+    let i = 0;
+
+    if (current > maxLevel) {
+      // First find the point where we're up to. Consider us at lvl 93, we want to
+      // finish with i = 2 (where grailCosts + 6).
+      for (; i < grailCosts.length; i++) {
+        if (maxLevel + grailCosts[i].add >= current) break;
+      }
+      i++;
     }
 
-    requirements.items.set(grailId, (requirements.items.get(grailId) ?? 0) + grails);
+    let grails = 0, coins = 0;
+    for (; i < grailCosts.length; i++) {
+      const grail = grailCosts[i];
+      const withGrail = maxLevel + grail.add;
+      requirements.qp += grail.qp;
+      grails++;
+      if (withGrail > 100) coins += 30;
+      if (withGrail >= target) break;
+    }
+
+    if (grails > 0) requirements.items.set(grailId, (requirements.items.get(grailId) ?? 0) + grails);
+    if (coins > 0) requirements.items.set(details.coin, (requirements.items.get(details.coin) ?? 0) + coins);
   }
 };
 

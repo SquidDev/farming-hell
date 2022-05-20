@@ -1,5 +1,6 @@
 import { newServant } from "../store";
 import { fsStore } from "../test";
+import { grailId } from "./constants";
 import { addServantRequirements, newRequirements } from "./requirements";
 
 test("Computes ascension materials", async () => {
@@ -68,11 +69,55 @@ test("Level defaults to 1", async () => {
   expect(requirements).toMatchSnapshot();
 });
 
-test("Computes grailing materials", async () => {
+test("Computes grailing materials (80..100)", async () => {
   const store = await fsStore();
 
   const servant = newServant();
   servant.level = { current: 80, target: 100 };
+
+  const requirements = newRequirements();
+  addServantRequirements(requirements, store, servant, store.servantLookup.get(servant.id)!);
+  expect(requirements).toMatchSnapshot();
+});
+
+test("Computes grailing materials (90..100)", async () => {
+  const store = await fsStore();
+
+  const servant = newServant();
+  servant.level = { current: 90, target: 100 };
+
+  const requirements = newRequirements();
+  addServantRequirements(requirements, store, servant, store.servantLookup.get(servant.id)!);
+  expect(requirements.items.get(grailId)).toEqual(5);
+});
+
+test("Computes grailing materials (92..100)", async () => {
+  const store = await fsStore();
+
+  const servant = newServant();
+  servant.level = { current: 92, target: 100 };
+
+  const requirements = newRequirements();
+  addServantRequirements(requirements, store, servant, store.servantLookup.get(servant.id)!);
+  expect(requirements.items.get(grailId)).toEqual(4);
+});
+
+test("Computes grailing materials (93..100)", async () => {
+  const store = await fsStore();
+
+  const servant = newServant();
+  servant.level = { current: 93, target: 100 };
+
+  const requirements = newRequirements();
+  addServantRequirements(requirements, store, servant, store.servantLookup.get(servant.id)!);
+  expect(requirements.items.get(grailId)).toEqual(3);
+});
+
+test("Computes lvl 120 materials", async () => {
+  const store = await fsStore();
+
+  const servant = newServant();
+  servant.level = { current: 90, target: 120 };
 
   const requirements = newRequirements();
   addServantRequirements(requirements, store, servant, store.servantLookup.get(servant.id)!);

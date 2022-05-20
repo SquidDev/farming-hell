@@ -33,8 +33,8 @@ const convertRangedMap = <T, U>(object: { [key: string]: T }, start: number, end
   return out;
 };
 
-// Individuality ids which are treated as "boring" and so don't count towards our "is event item" heuristic.
-const boringIndividuality = new Set<number>([10085]);
+// Item types which are treated as "boring".
+const boringTypes = new Set<string>(["svtCoin", "eventItem"]);
 
 /**
  * Merges and converts data into a more suitable format.
@@ -42,7 +42,7 @@ const boringIndividuality = new Set<number>([10085]);
 class Converter {
   private expGrowth: Array<number>;
   public itemMap: IdMap<Item> = new Map();
-  public servantMap: IdMap<Servant> = new Map();
+  public servants: Array<Servant> = [];
 
   constructor(expGrowth: Array<number>) {
     this.expGrowth = expGrowth;
@@ -64,68 +64,95 @@ class Converter {
   public addItem(item: AtlasItem, alwaysDisplay: boolean | undefined = undefined): void {
     this.itemMap.set(item.id, {
       id: item.id, name: item.name.trim(), icon: item.icon, background: item.background, priority: item.priority,
-      alwaysDisplay: alwaysDisplay ?? item.individuality.every(x => boringIndividuality.has(x.id)), // individuality appears to only be set for event items.
+      alwaysDisplay: alwaysDisplay ?? !boringTypes.has(item.type),
       events: [],
       drops: [],
     });
   }
 
-  private convertUpgradeItem = ({ item, amount }: UpgradeItem<AtlasItem>): UpgradeItem<Id<"item">> => {
+  private convertItemId = (item: AtlasItem): Id<"item"> => {
     if (!this.itemMap.has(item.id)) this.addItem(item);
-    return { item: item.id, amount };
-  };
+    return item.id;
+  }
+
+  private convertUpgradeItem = ({ item, amount }: UpgradeItem<AtlasItem>): UpgradeItem<Id<"item">> =>
+    ({ item: this.convertItemId(item), amount });
 
   private convertUpgradeRequirements = (reqs: UpgradeRequirements<AtlasItem> | undefined): UpgradeRequirements<Id<"item">> =>
     reqs ? { qp: reqs.qp, items: reqs.items.map(x => this.convertUpgradeItem(x)) } : { qp: 0, items: [] };
 
-  public addServant(servant: AtlasServant): void {
-    if (servant.type === "enemyCollectionDetail") return;
+  private convertSkill = (skill: Skill): Skill => ({
+    id: skill.id,
+    name: skill.name,
+    icon: skill.icon,
+    detail: skill.detail,
+  });
 
-    const name = servant.name.replace(/\bAltria\b/, "Artoria");
+  public addServant(jpServant: AtlasServant, naServant?: AtlasServant): void {
+    if (jpServant.type === "enemyCollectionDetail") return;
 
-    if (this.servantMap.has(servant.id)) {
-      const current = this.servantMap.get(servant.id)!;
-      if (current.name !== name) {
-        console.error(`Servants for id #${servant.id} do not match (${current.name} vs ${name})`);
-      }
-
-      return;
-    }
+    const name = (naServant ?? jpServant).name.replace(/\bAltria\b/, "Artoria");
 
     const skills: Array<Array<Skill>> = [[], [], []];
-    for (const skill of servant.skills ?? []) {
-      skills[skill.num - 1].push({
-        id: skill.id,
-        name: skill.name,
-        icon: skill.icon,
-        num: skill.num,
-        detail: skill.detail,
-      });
+    const seenSkills = new Set<Id<"skill">>();
+
+    const appendSkills: Array<Array<Skill>> = [[], [], []];
+    const appendSkillMaterials = convertOptRangedMap(jpServant.appendSkillMaterials, 1, 9, this.convertUpgradeRequirements);
+
+    if (naServant) {
+      for (const skill of naServant.skills) {
+        if (seenSkills.has(skill.id)) continue;
+        skills[skill.num - 1].push(this.convertSkill(skill));
+        seenSkills.add(skill.id);
+      }
+
+      for (const { num, skill } of naServant.appendPassive) {
+        if (seenSkills.has(skill.id)) continue;
+        appendSkills[num - 100].push(this.convertSkill(skill));
+        seenSkills.add(skill.id);
+      }
     }
 
+    for (const skill of jpServant.skills) {
+      if (seenSkills.has(skill.id)) continue;
+      skills[skill.num - 1].push(this.convertSkill(skill));
+      seenSkills.add(skill.id);
+    }
+
+    for (const { num, skill } of jpServant.appendPassive) {
+      if (seenSkills.has(skill.id)) continue;
+      appendSkills[num - 100].push(this.convertSkill(skill));
+      seenSkills.add(skill.id);
+    }
+
+    // const appendSkills = naServant?.appendPassive ?? na
+
     const details: Servant = {
-      id: servant.id,
-      webcrowId: servant.collectionNo,
+      id: jpServant.id,
+      webcrowId: jpServant.collectionNo,
       name,
-      rarity: servant.rarity,
-      npType: servant.noblePhantasms?.[0].card,
+      rarity: jpServant.rarity,
+      npType: jpServant.noblePhantasms?.[0].card,
+      coin: this.convertItemId(jpServant.coin.item),
 
       // Atlas provides materials in objects. We convert these to arrays.
-      ascensions: convertRangedMap(servant.extraAssets.faces.ascension, 1, 4, x => x),
-      skillMaterials: convertOptRangedMap(servant.skillMaterials, 1, 9, this.convertUpgradeRequirements),
+      ascensions: convertRangedMap(jpServant.extraAssets.faces.ascension, 1, 4, x => x),
+      skillMaterials: convertOptRangedMap(jpServant.skillMaterials, 1, 9, this.convertUpgradeRequirements),
+      appendSkillMaterials,
       ascensionMaterials:
-        Object.keys(servant.ascensionMaterials).length
-          ? convertRangedMap(servant.ascensionMaterials, 0, 3, this.convertUpgradeRequirements)
+        Object.keys(jpServant.ascensionMaterials).length
+          ? convertRangedMap(jpServant.ascensionMaterials, 0, 3, this.convertUpgradeRequirements)
           : undefined,
-      lvlMax: convertRangedMap(servant.ascensionAdd.lvMax.ascension, 0, 4, x => x),
+      lvlMax: convertRangedMap(jpServant.ascensionAdd.lvMax.ascension, 0, 4, x => x),
 
       skills,
+      appendSkills,
     };
-    this.servantMap.set(servant.id, details);
+    this.servants.push(details);
 
     for (let i = 0; i < this.expGrowth.length; i++) {
-      if (this.expGrowth[i] !== servant.expGrowth[i]) {
-        console.warn(`Exp growth for ${servant.name} does not match.`);
+      if (this.expGrowth[i] !== jpServant.expGrowth[i]) {
+        console.warn(`Exp growth for ${name} does not match.`);
         break;
       }
     }
@@ -241,9 +268,9 @@ const extractFgoSim = async (): Promise<void> => {
  * Compute FGO Material Simulator ids. These appear to be manually assigned, and so are often inconsistent with FGO's
  * internal ids, so we need to do some remapping.
  *
- * @param servantMap Map of all servants.
+ * @param servants List of all servants.
  */
-const recomputeFgoSimIds = (servantMap: IdMap<Servant>): void => {
+const recomputeFgoSimIds = (servants: Array<Servant>): void => {
   const mapping = new Map<Id<"servant">, number>();
 
   mapping.set(makeId("servant", 101700), 150); // Musashi
@@ -263,7 +290,7 @@ const recomputeFgoSimIds = (servantMap: IdMap<Servant>): void => {
   mapping.set(makeId("servant", 104800), 295); // Karna (Santa)
   mapping.set(makeId("servant", 304600), 296); // Vritra
 
-  for (const servant of servantMap.values()) {
+  for (const servant of servants) {
     const overwrite = mapping.get(servant.id);
     if (overwrite !== undefined) {
       servant.webcrowId = overwrite;
@@ -315,7 +342,7 @@ void (async () => {
   await getAsFile("https://api.atlasacademy.io/export/NA/nice_servant.json", `${outDir}/servants_na.json`, isNew);
   await getAsFile("https://api.atlasacademy.io/export/JP/basic_event_lang_en.json", `${outDir}/events_jp.json`, isNew);
   await getAsFile("https://api.atlasacademy.io/export/NA/nice_item.json", `${outDir}/items_na.json`, isNew);
-  await getAsFile("https://api.atlasacademy.io/export/NA/NiceSvtGrailCost.json", `${outDir}/grail_na.json`, isNew);
+  await getAsFile("https://api.atlasacademy.io/export/JP/NiceSvtGrailCost.json", `${outDir}/grail_jp.json`, isNew);
   if (enableFgoSim) await getAsFile("http://fgosimulator.webcrow.jp/Material/js/fgos_material.min.js", `${outDir}/fgo_sim.js`, isNew);
 
   const sheetsKey = process.env.SHEETS_KEY;
@@ -337,15 +364,18 @@ void (async () => {
   const jpServants = JSON.parse(await fs.readFile(`${outDir}/servants_jp.json`, "utf-8")) as Array<AtlasServant>;
   const events = JSON.parse(await fs.readFile(`${outDir}/events_jp.json`, "utf-8")) as Array<EventSummary>;
   const items = JSON.parse(await fs.readFile(`${outDir}/items_na.json`, "utf-8")) as Array<AtlasItem>;
-  const grailCost = JSON.parse(await fs.readFile(`${outDir}/grail_na.json`, "utf-8")) as AtlasGrailCost;
-  const expGrowth = naServants[0].expGrowth.slice(0, 100);
+  const grailCost = JSON.parse(await fs.readFile(`${outDir}/grail_jp.json`, "utf-8")) as AtlasGrailCost;
+  const expGrowth = jpServants[0].expGrowth;
 
   const converter = new Converter(expGrowth);
   converter.addItem(items.find(x => x.id === qpId)!, true);
   converter.addItem(items.find(x => x.id === grailId)!, true);
-  for (const servant of naServants) converter.addServant(servant);
-  for (const servant of jpServants) converter.addServant(servant);
-  const { servantMap, itemMap } = converter;
+
+  const mergedServants = new Map<Id<"servant">, { jp: AtlasServant, na?: AtlasServant }>();
+  for (const servant of jpServants) mergedServants.set(servant.id, { jp: servant });
+  for (const servant of naServants) mergedServants.get(servant.id)!.na = servant;
+  for (const servant of mergedServants.values()) converter.addServant(servant.jp, servant.na);
+  const { servants, itemMap } = converter;
 
   // Find all events which occur after now and sort them by how soon they are. Also skip 80038 (i.e. Solomon).
   // TODO: We probably should do this filter in the app too.
@@ -358,12 +388,15 @@ void (async () => {
 
   // Download all images for servants and items.
   const seenImages = new Set<string>();
-  for (const servant of servantMap.values()) {
+  for (const servant of servants) {
     tasks.push(async () => {
       for (let i = 0; i < servant.ascensions.length; i++) {
         servant.ascensions[i] = await downloadImage(seenImages, servant.ascensions[i], skipImageDownload);
       }
       for (const skills of servant.skills) {
+        for (const skill of skills) skill.icon = await downloadImage(seenImages, skill.icon, skipImageDownload);
+      }
+      for (const skills of servant.appendSkills) {
         for (const skill of skills) skill.icon = await downloadImage(seenImages, skill.icon, skipImageDownload);
       }
     });
@@ -372,7 +405,7 @@ void (async () => {
     tasks.push(async () => { item.icon = await downloadImage(seenImages, item.icon, skipImageDownload); });
   }
 
-  recomputeFgoSimIds(servantMap);
+  recomputeFgoSimIds(servants);
 
   // Download all additional data about events.
   const wars = new Set<Id<"war">>();
@@ -465,7 +498,7 @@ void (async () => {
   if (enableFgoSim) await extractFgoSim();
 
   const result: DataDump = {
-    servants: [...servantMap.values()].sort((a, b) => {
+    servants: servants.sort((a, b) => {
       if (a.name < b.name) return -1;
       if (a.name > b.name) return 1;
       return 0;

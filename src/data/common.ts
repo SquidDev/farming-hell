@@ -45,7 +45,6 @@ export type UpgradeRequirements<I> = {
 /** A skill which is usable by a servant. */
 export type Skill = {
   id: Id<"skill">,
-  num: number,
   name: string,
   detail: string,
   icon: string,

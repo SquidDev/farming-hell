@@ -46,10 +46,13 @@ export type Servant = {
   id: Id<"servant">,
   name: string,
   rarity: number,
+  coin: Id<"item">,
   ascensions: Array<string>,
   ascensionMaterials?: Array<UpgradeRequirements>,
   skillMaterials: Array<UpgradeRequirements>,
   skills: Array<Array<Skill>>,
+  appendSkillMaterials: Array<UpgradeRequirements>,
+  appendSkills: Array<Array<Skill>>,
   lvlMax: Array<number>,
   npType?: CardColour,
 

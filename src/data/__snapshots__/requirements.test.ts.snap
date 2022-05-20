@@ -32,7 +32,7 @@ Object {
 }
 `;
 
-exports[`Computes grailing materials 1`] = `
+exports[`Computes grailing materials (80..100) 1`] = `
 Object {
   "exp": 437,
   "expBonus": 364,
@@ -59,6 +59,18 @@ Object {
     6506 => 5,
   },
   "qp": 4400000,
+}
+`;
+
+exports[`Computes lvl 120 materials 1`] = `
+Object {
+  "exp": 15348,
+  "expBonus": 12790,
+  "items": Map {
+    7999 => 15,
+    10010001 => 300,
+  },
+  "qp": 205000000,
 }
 `;
 

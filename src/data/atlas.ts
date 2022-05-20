@@ -10,6 +10,7 @@ import type { CardColour, Id, Item as Item_, Skill, UpgradeRequirements } from "
 
 export type AtlasItem = Item_ & {
   individuality: Array<{ id: number, name: number }>,
+  type: string,
 }
 
 /** A noble phantasm usable by a servant. */
@@ -19,6 +20,11 @@ export type NoblePhantasm = {
   card: CardColour,
 };
 
+export type AppendSkill = {
+  num: number,
+  skill: Skill,
+  unlockMaterials: Array<UpgradeRequirements<AtlasItem>>,
+}
 
 /**
  * A servant within the nice_servant.json file. We don't actually use this
@@ -37,13 +43,16 @@ export type AtlasServant = {
       ascension: { [key: string]: string },
     },
   },
+  coin: { item: AtlasItem },
 
   /** Materials required to ascend. Contains "0".."3". */
   ascensionMaterials: { [key: string]: UpgradeRequirements<AtlasItem> },
 
   /** Materials required to upgrade skills. Contains "1".."9". */
   skillMaterials: { [key: string]: UpgradeRequirements<AtlasItem> },
-  skills?: Array<Skill>,
+  appendSkillMaterials: { [key: string]: UpgradeRequirements<AtlasItem> },
+  skills: Array<Skill & { num: number }>,
+  appendPassive: Array<AppendSkill>,
   expGrowth: Array<number>,
   noblePhantasms: Array<NoblePhantasm>,
 

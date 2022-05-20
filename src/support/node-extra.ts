@@ -92,7 +92,7 @@ export type TaskQueue = Array<Task>;
  * Run a list of tasks in parallel, with a limit on the maximum number of tasks run at once.
  */
 export const runTasksInParallel = async (tasks: TaskQueue, workers = 8): Promise<void> => {
-  let started = 0;
+  let started = 0, finished = 0;
 
   const workerTasks = [];
   const worker = async (): Promise<void> => {
@@ -100,11 +100,13 @@ export const runTasksInParallel = async (tasks: TaskQueue, workers = 8): Promise
       const task = tasks.pop();
       if (!task) return;
 
+      started++; // We need a separate counter here as tasks might grow while this is running.
+
       const start = process.uptime();
-      started++;
       await task();
+      finished++;
       const finish = process.uptime();
-      if (finish - start > 0.1) console.log(`Run ${started}/${started + tasks.length} tasks`);
+      if (finish - start > 0.1) console.log(`Run ${finished}/${started + tasks.length} tasks`);
     }
   };
 

@@ -26,7 +26,7 @@ const target = (label: string, min: number, max: number): yup.Schema<Target> => 
 export const ownedServant: yup.Schema<Omit<OwnedServant, "uid">> = yup.object().shape({
   id: yup.number().positive().required() as unknown as yup.Schema<Id<"servant">>,
   priority: yup.string().oneOf(["High", "Medium", "Low", "Unsummoned"]).required() as yup.Schema<Priority>,
-  level: target("Level", 1, 100),
+  level: target("Level", 1, 120),
   ascension: target("Ascension", 0, 4),
   skills: yup.array().of(target("Skill", 1, 10)).length(3).required(),
 });
