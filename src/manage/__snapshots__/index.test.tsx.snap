@@ -17,6 +17,7 @@ Array [
     >
       <ServantSelect />
       <select
+        className="bg-white p-1 rounded-lg border focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400"
         name="priority"
         onBlur={[Function]}
         onChange={[Function]}
@@ -314,6 +315,7 @@ Array [
     >
       <ServantSelect />
       <select
+        className="bg-white p-1 rounded-lg border focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400"
         name="priority"
         onBlur={[Function]}
         onChange={[Function]}
@@ -611,6 +613,7 @@ Array [
     >
       <ServantSelect />
       <select
+        className="bg-white p-1 rounded-lg border focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400"
         name="priority"
         onBlur={[Function]}
         onChange={[Function]}

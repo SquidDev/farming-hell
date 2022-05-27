@@ -180,7 +180,10 @@ export const ServantInput: FunctionComponent<{ servant: OwnedServant, store: Sto
 
         <div className="w-full flex flex-col flex-grow justify-center">
           <ServantSelect name="id" className="mb-1" servants={store.servantLookup} />
-          <Field name="priority" component="select">{priorities}</Field>
+          <Field
+            name="priority" component="select"
+            className="bg-white p-1 rounded-lg border focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400"
+          >{priorities}</Field>
         </div>
 
         {isTouch && <div

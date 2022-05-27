@@ -1,5 +1,5 @@
 import { Field, FieldAttributes, FormikProps, GenericFieldHTMLAttributes, useField } from "formik";
-import { FunctionComponent, ReactNode, forwardRef, useEffect, useState } from "react";
+import { FunctionComponent, ReactNode, forwardRef, useEffect, useRef } from "react";
 import Tooltip from "rc-tooltip";
 import "rc-tooltip/assets/bootstrap.css";
 
@@ -44,11 +44,11 @@ export const Input: FunctionComponent<{
  * change, rather than the form is submitted.
  */
 export const SubmitOnChange = <T,>({ formik }: { formik: FormikProps<T> }): null => {
-  const [lastValues, updateState] = useState(formik.values);
+  const lastValues = useRef(formik.values);
 
   useEffect(() => {
-    if (lastValues !== formik.values && formik.isValid) {
-      updateState(formik.values);
+    if (lastValues.current !== formik.values && formik.isValid) {
+      lastValues.current = formik.values;
       void formik.submitForm();
     }
   }, [
