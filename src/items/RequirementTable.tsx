@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { FunctionComponent, Reducer, useCallback, useReducer } from "react";
+import { FunctionComponent, ReactNode, Reducer, useCallback, useReducer } from "react";
 import * as yup from "yup";
 import { Formik } from "formik";
 import { action } from "mobx";
@@ -204,7 +204,7 @@ type Sorting = {
   descending: boolean,
 } | null;
 
-const SortableHeader: FunctionComponent<{ column: Column, sort: Sorting, setSort: (column: Column) => void }> = ({ column, sort, setSort, children }) => {
+const SortableHeader: FunctionComponent<{ column: Column, sort: Sorting, setSort: (column: Column) => void, children: ReactNode }> = ({ column, sort, setSort, children }) => {
   const callback = useCallback(() => setSort(column), [column, setSort]);
   return <th scope="col" className="py-4 px-2" aria-sort={sort?.column === column ? (sort.descending ? "descending" : "ascending") : "none"}>
     <button type="button" className="font-bold hover:text-gray-700" onClick={callback}>
@@ -217,7 +217,6 @@ const SortableHeader: FunctionComponent<{ column: Column, sort: Sorting, setSort
 const sortColumn: Reducer<Sorting, Column> = (sort, column) => {
   // Sorting a new column sorts it ascending, sorting the current column either switches it to descending or cancels the
   // sort.
-  console.log(sort, column);
   if (sort === null || sort.column !== column) return { column, descending: false };
   if (!sort.descending) return { column, descending: true };
   return null;
@@ -236,7 +235,6 @@ const RequirementTable: FunctionComponent<{ store: Store }> = observer(function 
   const [sort, setSort] = useReducer(sortColumn, null);
 
   let items: Array<{ item: Item, getter: (r: Requirements) => number }>;
-  console.log(sort);
   if (sort === null) {
     items = store.requirementItems;
   } else {

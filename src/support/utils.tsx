@@ -1,4 +1,4 @@
-import type { FunctionComponent } from "react";
+import type { FunctionComponent, ReactNode } from "react";
 
 /**
  * Small helper-function for building class names.
@@ -15,7 +15,7 @@ export const Icon: FunctionComponent<{ className?: string, src: string, alt: str
 
 // I love Tailwind, but still haven't figured out the right way to do sane styling for links.
 // Oh web dev, how I tire of you.
-export const ExternalLink: FunctionComponent<{ href: string }> = ({ href, children }) =>
+export const ExternalLink: FunctionComponent<{ href: string, children: ReactNode }> = ({ href, children }) =>
   <a href={href} target="_blank" className="font-bold text-blue-600 hover:text-blue-900 active:text-blue-900 focus:text-blue-900" rel="noreferrer">
     {children}
   </a>;

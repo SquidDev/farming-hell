@@ -1,0 +1,13 @@
+diff --git a/node_modules/yup/index.d.ts b/node_modules/yup/index.d.ts
+index 67e740f..7993506 100644
+--- a/node_modules/yup/index.d.ts
++++ b/node_modules/yup/index.d.ts
+@@ -21,7 +21,7 @@ declare type AnyObject = {
+     [k: string]: any;
+ };
+ declare type TypeFromShape<S extends ObjectShape, C> = {
+-    [K in keyof S]: S[K] extends ISchema<any, C> ? S[K]['__outputType'] : unknown;
++    [K in keyof S]: S[K] extends ISchema<any, C> ? InferType<S[K]> : unknown;
+ };
+ declare type DefaultFromShape<Shape extends ObjectShape> = {
+     [K in keyof Shape]: Shape[K] extends ISchema<any> ? Shape[K]['__default'] : undefined;

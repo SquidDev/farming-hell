@@ -1,9 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, FunctionComponent } from "react";
+import { Fragment, FunctionComponent, ReactNode } from "react";
 
 import { classNames } from "./utils";
 
-const WrappedDialog: FunctionComponent<{ isOpen: boolean, setOpen: (open: boolean) => void, className?: string }> = ({ isOpen, setOpen, className, children }) =>
+const WrappedDialog: FunctionComponent<{ isOpen: boolean, setOpen: (open: boolean) => void, className?: string, children: ReactNode }> = ({ isOpen, setOpen, className, children }) =>
   <Transition appear show={isOpen} as={Fragment}>
     <Dialog
       as="div"

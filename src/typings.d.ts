@@ -12,3 +12,8 @@ declare module "*.png" {
   const path: string;
   export default path;
 }
+
+// Needed for Formik
+declare namespace React {
+  type StatelessComponent<P> = React.FunctionComponent<P>;
+}

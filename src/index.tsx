@@ -1,5 +1,5 @@
-import { FunctionComponent, StrictMode, useCallback, useEffect, useState } from "react";
-import { render } from "react-dom";
+import { FunctionComponent, ReactNode, StrictMode, useCallback, useEffect, useState } from "react";
+import { createRoot } from "react-dom/client";
 import { Menu, Tab } from "@headlessui/react";
 
 import type { DataDump, Servant } from "./data";
@@ -22,7 +22,7 @@ const tabClassName = ({ selected }: { selected: boolean }): string => {
   return classNames("p-2", "rounded-lg", "shadow-md", selected ? "bg-white" : "bg-blue-200 hover:bg-blue-100");
 };
 
-const MenuWrapper: FunctionComponent<{ title: string }> = ({ title, children }) =>
+const MenuWrapper: FunctionComponent<{ title: string, children: ReactNode }> = ({ title, children }) =>
   <Menu as="div" className="relative lg:w-full">
     <Menu.Button className={classNames("lg:w-full", tabClassName({ selected: false }))}>{title}</Menu.Button>
     <Menu.Items
@@ -37,7 +37,7 @@ const MenuWrapper: FunctionComponent<{ title: string }> = ({ title, children }) 
     </Menu.Items>
   </Menu>;
 
-const MenuItem: FunctionComponent<{ active: boolean }> = ({ active, children, ...props }) =>
+const MenuItem: FunctionComponent<{ active: boolean, children: ReactNode } & JSX.IntrinsicElements["button"]> = ({ active, children, ...props }) =>
   <button
     type="button"
     {...props}
@@ -73,17 +73,17 @@ const MainControl: FunctionComponent<{ store: Store }> = ({ store }) => {
 
       <div className="flex lg:flex-col items-start gap-2">
         <MenuWrapper title="Import">
-          <Menu.Item onClick={() => loadFromFile(store, readJson, "application/json")}>{({ active }) => <MenuItem active={active}>Load from JSON</MenuItem>}</Menu.Item>
-          <Menu.Item onClick={() => openDialogue(<ImportWebcrow store={store} setOpen={setDialogueOpen} />)}>{({ active }) => <MenuItem active={active}>Import from FGO Material Simulator</MenuItem>}</Menu.Item>
+          <Menu.Item>{({ active }) => <MenuItem active={active} onClick={() => loadFromFile(store, readJson, "application/json")}>Load from JSON</MenuItem>}</Menu.Item>
+          <Menu.Item>{({ active }) => <MenuItem active={active} onClick={() => openDialogue(<ImportWebcrow store={store} setOpen={setDialogueOpen} />)}>Import from FGO Material Simulator</MenuItem>}</Menu.Item>
         </MenuWrapper>
         <MenuWrapper title="Export">
-          <Menu.Item onClick={() => storeToFile(store, writeJson, "fgo-planner.json", "application/json")}>{({ active }) => <MenuItem active={active}>Save as JSON</MenuItem>}</Menu.Item>
-          <Menu.Item onClick={() => storeToFile(store, writeCsv, "fgo-planner.csv", "text/csv")}>{({ active }) => <MenuItem active={active}>Save as CSV</MenuItem>}</Menu.Item>
-          <Menu.Item onClick={() => openDialogue(<ExportWebcrow store={store} setOpen={setDialogueOpen} />)}>{({ active }) => <MenuItem active={active}>Export Servants to FGO Material Simulator</MenuItem>}</Menu.Item>
+          <Menu.Item>{({ active }) => <MenuItem active={active} onClick={() => storeToFile(store, writeJson, "fgo-planner.json", "application/json")}>Save as JSON</MenuItem>}</Menu.Item>
+          <Menu.Item>{({ active }) => <MenuItem active={active} onClick={() => storeToFile(store, writeCsv, "fgo-planner.csv", "text/csv")}>Save as CSV</MenuItem>}</Menu.Item>
+          <Menu.Item>{({ active }) => <MenuItem active={active} onClick={() => openDialogue(<ExportWebcrow store={store} setOpen={setDialogueOpen} />)}>Export Servants to FGO Material Simulator</MenuItem>}</Menu.Item>
         </MenuWrapper>
         <MenuWrapper title="Help">
-          <Menu.Item onClick={() => openDialogue(<About />)}>{({ active }) => <MenuItem active={active}>About</MenuItem>}</Menu.Item>
-          <Menu.Item onClick={() => openDialogue(<Instructions />)}>{({ active }) => <MenuItem active={active}>Instructions</MenuItem>}</Menu.Item>
+          <Menu.Item>{({ active }) => <MenuItem active={active} onClick={() => openDialogue(<About />)}>About</MenuItem>}</Menu.Item>
+          <Menu.Item>{({ active }) => <MenuItem active={active} onClick={() => openDialogue(<Instructions />)}>Instructions</MenuItem>}</Menu.Item>
         </MenuWrapper>
       </div>
     </Tab.List>
@@ -114,4 +114,4 @@ const Document: FunctionComponent = function Document() {
   </div>;
 };
 
-render(<StrictMode><Document /></StrictMode>, document.getElementById("container"));
+createRoot(document.getElementById("container")!).render(<StrictMode><Document /></StrictMode>);
