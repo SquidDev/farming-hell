@@ -35,6 +35,8 @@ Array [
   "6533 => Stake of Wailing Night",
   "6534 => Mystic Gunpowder",
   "6549 => Small Bell of Absolution",
+  "6551 => 黄昏の儀式剣",
+  "6552 => 忘れじの灰",
   "6502 => Seed of Yggdrasil",
   "6508 => Ghost Lantern",
   "6515 => Octuplet Crystals",
@@ -209,5 +211,8 @@ Array [
   "334 => ours=504700:'Daikokuten' theirs=''",
   "335 => ours=304900:'Mary Anning' theirs=''",
   "336 => ours=404700:'Constantine XI' theirs=''",
+  "337 => ours=105200:'Charlemagne' theirs=''",
+  "338 => ours=104300:'Roland' theirs=''",
+  "339 => ours=704200:'Kriemhild' theirs=''",
 ]
 `;
