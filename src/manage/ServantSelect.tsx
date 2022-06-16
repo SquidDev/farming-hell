@@ -17,7 +17,7 @@ const makeServants = (query: string, servants: IdMap<Servant>): ReactNode => {
         if (alias.toLowerCase().includes(query)) {
           matches = true;
           matchAlias = alias;
-          break
+          break;
         }
       }
       if (!matches) return;

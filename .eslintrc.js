@@ -106,6 +106,10 @@ module.exports = {
         "@typescript-eslint/prefer-includes": "warn",
         "@typescript-eslint/prefer-nullish-coalescing": "warn",
         "@typescript-eslint/prefer-optional-chain": "warn",
+
+        "@typescript-eslint/ban-ts-comment": ["error", {
+          "ts-ignore": "allow-with-description",
+        }],
       }
     }
   ]

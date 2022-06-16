@@ -91,7 +91,7 @@ class Converter {
   public addServant(jpServant: AtlasServant, naServant?: AtlasServant): void {
     if (jpServant.type === "enemyCollectionDetail") return;
 
-    const originalName = (naServant ?? jpServant).name
+    const originalName = (naServant ?? jpServant).name;
     const name = originalName.replace(/\bAltria\b/, "Artoria");
 
     // Go through the servant changes to find possible aliases (i.e. Assassin of Inferno).

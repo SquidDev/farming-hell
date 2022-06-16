@@ -63,7 +63,7 @@ export type AtlasServant = {
   },
 
   svtChange: Array<{
-    name: string
+    name: string,
   }>,
 }
 
