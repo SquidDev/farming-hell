@@ -28,6 +28,8 @@ export const Input: FunctionComponent<{
       {children}
     </>}
     placement='bottom'
+    // @ts-ignore: Types for Tooltip are incomplete.
+    blurDelay={0}
   >
     <RefField
       name={name}
