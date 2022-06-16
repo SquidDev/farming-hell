@@ -45,6 +45,7 @@ export type Item = Item_ & {
 export type Servant = {
   id: Id<"servant">,
   name: string,
+  aliases: Array<string>,
   rarity: number,
   coin: Id<"item">,
   ascensions: Array<string>,

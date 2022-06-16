@@ -61,6 +61,10 @@ export type AtlasServant = {
       ascension: { [key: number]: number },
     },
   },
+
+  svtChange: Array<{
+    name: string
+  }>,
 }
 
 export type EventSummary = {

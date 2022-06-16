@@ -91,7 +91,15 @@ class Converter {
   public addServant(jpServant: AtlasServant, naServant?: AtlasServant): void {
     if (jpServant.type === "enemyCollectionDetail") return;
 
-    const name = (naServant ?? jpServant).name.replace(/\bAltria\b/, "Artoria");
+    const originalName = (naServant ?? jpServant).name
+    const name = originalName.replace(/\bAltria\b/, "Artoria");
+
+    // Go through the servant changes to find possible aliases (i.e. Assassin of Inferno).
+    // Also add the inferior Artoria to our aliases.
+    const aliases = new Set<string>();
+    for (const change of (naServant ?? jpServant).svtChange) aliases.add(change.name);
+    if (originalName !== name) aliases.add(originalName);
+    aliases.delete(name);
 
     const skills: Array<Array<Skill>> = [[], [], []];
     const seenSkills = new Set<Id<"skill">>();
@@ -133,6 +141,7 @@ class Converter {
       id: jpServant.id,
       webcrowId: jpServant.collectionNo,
       name,
+      aliases: [...aliases],
       rarity: jpServant.rarity,
       npType: jpServant.noblePhantasms?.[0].card,
       coin: this.convertItemId(jpServant.coin.item),

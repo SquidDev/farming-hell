@@ -10,14 +10,25 @@ const makeServants = (query: string, servants: IdMap<Servant>): ReactNode => {
 
   const options: Array<ReactNode> = [];
   servants.forEach(servant => {
-    if (!servant.name.toLowerCase().includes(query)) return;
+    let matchAlias: string | null = null;
+    if (!servant.name.toLowerCase().includes(query)) {
+      let matches = false;
+      for (const alias of servant.aliases) {
+        if (alias.toLowerCase().includes(query)) {
+          matches = true;
+          matchAlias = alias;
+          break
+        }
+      }
+      if (!matches) return;
+    }
 
     options.push(<Combobox.Option key={servant.id} value={servant} className={({ active, selected }) => classNames(
       "flex items-center p-2",
       selected ? "bg-blue-600" : (active ? "bg-blue-100" : undefined)
     )}>
       <img className="w-8 h-8 mr-1 squircle" alt={servant.name} src={servant.ascensions[0]} width="128" height="128" loading="lazy" />
-      <span className="flex-grow">{servant.name}</span>
+      <span className="flex-grow">{servant.name} {matchAlias && <span className="text-sm">({matchAlias})</span>}</span>
     </Combobox.Option>);
   });
   return options;
