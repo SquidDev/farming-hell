@@ -1,7 +1,8 @@
 import { Field, FieldAttributes, FormikProps, GenericFieldHTMLAttributes, useField } from "formik";
-import { FunctionComponent, ReactNode, forwardRef, useEffect, useRef } from "react";
 import Tooltip from "rc-tooltip";
 import "rc-tooltip/assets/bootstrap.css";
+import { FunctionComponent, ReactNode, forwardRef, useEffect, useRef } from "react";
+import isEqual from "react-fast-compare";
 
 import { classNames } from "./utils";
 
@@ -49,7 +50,7 @@ export const SubmitOnChange = <T,>({ formik }: { formik: FormikProps<T> }): null
   const lastValues = useRef(formik.values);
 
   useEffect(() => {
-    if (lastValues.current !== formik.values && formik.isValid) {
+    if (!isEqual(lastValues.current, formik.values) && formik.isValid) {
       lastValues.current = formik.values;
       void formik.submitForm();
     }
