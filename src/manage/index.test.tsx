@@ -14,6 +14,13 @@ const newStoreAndServant = async (): Promise<[Store, OwnedServant]> => {
   return [store, servant];
 };
 
+// There's a weird Jest(?) bug where our input mock causes the react-fast-compare
+// import to fail.
+jest.mock("react-fast-compare", () => {
+  const module: typeof import("react-fast-compare") = jest.requireActual("react-fast-compare");
+  return { __esModule: true, default: module };
+})
+
 // Mock out some of the really noisy stuff
 jest.mock("./ServantSelect", () => ({
   __esModule: true,
