@@ -11,9 +11,10 @@ export const defaultFilters: Filters = Object.freeze({
 });
 
 const isMaxed = ({ current, target }: Target): boolean => current !== undefined && target !== undefined && current === target;
+const isMaxedLax = ({ current, target }: Target): boolean => current === target;
 
 export const matchesFilter = (filters: Filters, servant: OwnedServant): boolean => {
   if (filters.priority[servant.priority] === false) return false;
 
-  return filters.maxed || !isMaxed(servant.level) || !servant.skills.every(isMaxed);
+  return filters.maxed || !isMaxed(servant.level) || !servant.skills.every(isMaxed) || !servant.appendSkills.every(isMaxedLax);
 };
