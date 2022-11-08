@@ -1,0 +1,37 @@
+diff --git a/node_modules/yup/index.d.ts b/node_modules/yup/index.d.ts
+index 4331dd2..4968b42 100644
+--- a/node_modules/yup/index.d.ts
++++ b/node_modules/yup/index.d.ts
+@@ -243,7 +243,7 @@ declare abstract class Schema<TType = any, TContext = AnyObject, TDefault = any,
+     nonNullable(message?: Message<any>): any;
+     required(message?: Message<any>): any;
+     notRequired(): any;
+-    transform(fn: TransformFunction<this>): this;
++    transform(fn: TransformFunction<AnySchema>): this;
+     /**
+      * Adds a test function to the schema's queue of tests.
+      * tests can be exclusive or non-exclusive.
+@@ -261,10 +261,10 @@ declare abstract class Schema<TType = any, TContext = AnyObject, TDefault = any,
+     test(test: TestFunction<this['__outputType'], TContext>): this;
+     test(name: string, test: TestFunction<this['__outputType'], TContext>): this;
+     test(name: string, message: Message, test: TestFunction<this['__outputType'], TContext>): this;
+-    when<U extends ISchema<any> = this>(builder: ConditionBuilder<this, U>): U;
+-    when<U extends ISchema<any> = this>(keys: string | string[], builder: ConditionBuilder<this, U>): U;
+-    when<UThen extends ISchema<any> = this, UOtherwise extends ISchema<any> = this>(options: ConditionConfig<this, UThen, UOtherwise>): UThen | UOtherwise;
+-    when<UThen extends ISchema<any> = this, UOtherwise extends ISchema<any> = this>(keys: string | string[], options: ConditionConfig<this, UThen, UOtherwise>): UThen | UOtherwise;
++    when<U extends ISchema<any> = AnySchema>(builder: ConditionBuilder<this, U>): U;
++    when<U extends ISchema<any> = AnySchema>(keys: string | string[], builder: ConditionBuilder<this, U>): U;
++    when<UThen extends ISchema<any> = AnySchema, UOtherwise extends ISchema<any> = AnySchema>(options: ConditionConfig<AnySchema, UThen, UOtherwise>): UThen | UOtherwise;
++    when<UThen extends ISchema<any> = AnySchema, UOtherwise extends ISchema<any> = AnySchema>(keys: string | string[], options: ConditionConfig<AnySchema, UThen, UOtherwise>): UThen | UOtherwise;
+     typeError(message: Message): this;
+     oneOf<U extends TType>(enums: ReadonlyArray<U | Reference>, message?: Message<{
+         values: any;
+@@ -703,7 +703,7 @@ declare class ObjectSchema<TIn extends Maybe<AnyObject>, TContext = AnyObject, T
+     protected _cast(_value: any, options?: InternalOptions<TContext>): any;
+     protected _validate(_value: any, options: InternalOptions<TContext> | undefined, panic: (err: Error, value: unknown) => void, next: (err: ValidationError[], value: unknown) => void): void;
+     clone(spec?: ObjectSchemaSpec): this;
+-    concat<IIn, IC, ID, IF extends Flags>(schema: ObjectSchema<IIn, IC, ID, IF>): ObjectSchema<ConcatObjectTypes<TIn, IIn>, TContext & IC, Extract<IF, 'd'> extends never ? _<ConcatObjectTypes<TDefault, ID>> : ID, TFlags | IF>;
++    concat<IIn extends Maybe<AnyObject>, IC, ID extends Maybe<AnyObject>, IF extends Flags>(schema: ObjectSchema<IIn, IC, ID, IF>): ObjectSchema<ConcatObjectTypes<TIn, IIn>, TContext & IC, Extract<IF, 'd'> extends never ? _<ConcatObjectTypes<any, ID>> : ID, TFlags | IF>;
+     concat(schema: this): this;
+     protected _getDefault(): any;
+     private setFields;

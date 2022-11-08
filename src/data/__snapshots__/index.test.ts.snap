@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Has a basic list of items 1`] = `
-Array [
+[
   "1 => QP",
   "9770400 => Blaze of Wisdom",
   "6001 => Gem of Saber",
@@ -96,7 +96,7 @@ Array [
 `;
 
 exports[`Includes webcrow IDs 1`] = `
-Array [
+[
   "8 => ours=101800:'Altera' theirs='Attila'",
   "10 => ours=102600:'Chevalier d'Eon' theirs='Le Chevalier d'Eon'",
   "14 => ours=200500:'Atalante' theirs='Atalanta'",
@@ -128,7 +128,7 @@ Array [
   "111 => ours=502000:'Irisviel (Holy Grail)' theirs='Irisviel (Dress of Heaven)'",
   "113 => ours=502200:'Xuanzang Sanzang' theirs='Xuanzang'",
   "114 => ours=702300:'Minamoto-no-Raikou' theirs='Minamoto no Yorimitsu'",
-  "117 => ours=601900:'Fuuma \\"Evil-wind\\" Kotarou' theirs='Fuuma Kotarou'",
+  "117 => ours=601900:'Fuuma "Evil-wind" Kotarou' theirs='Fuuma Kotarou'",
   "118 => ours=401200:'Ozymandias' theirs='Ramesses II'",
   "121 => ours=102000:'Lancelot' theirs='Lancelot (Saber)'",
   "124 => ours=600900:'Hassan of the Serenity' theirs='Hassan of Serenity'",
@@ -139,7 +139,7 @@ Array [
   "145 => ours=501800:'Gilgamesh' theirs='Gilgamesh (Caster)'",
   "146 => ours=302700:'Medusa' theirs='Medusa (Lancer)'",
   "148 => ours=302800:'Jaguar Warrior' theirs='Jaguar Man'",
-  "151 => ours=602500:'\\"First Hassan\\"' theirs='King Hassan'",
+  "151 => ours=602500:'"First Hassan"' theirs='King Hassan'",
   "154 => ours=202300:'James Moriarty' theirs='Archer of Shinjuku'",
   "156 => ours=1100500:'Hessian Lobo' theirs='Avenger of Shinjuku'",
   "157 => ours=602600:'Yan Qing' theirs='Assassin of Shinjuku'",
@@ -156,7 +156,7 @@ Array [
   "182 => ours=602900:'Mochizuki Chiyome' theirs='Assassin Paraiso'",
   "183 => ours=301400:'Houzouin Inshun' theirs='Hozoin Inshun'",
   "184 => ours=103200:'Yagyu Tajima-no-kami Munenori' theirs='Yagyu Munenori'",
-  "185 => ours=603000:'Katou \\"Black Kite\\" Danzo' theirs='Kato Danzo'",
+  "185 => ours=603000:'Katou "Black Kite" Danzo' theirs='Kato Danzo'",
   "187 => ours=1000500:'Mecha Eli-chan Mk.II' theirs='Mecha Eli-chan'",
   "188 => ours=503300:'Circe' theirs='Caster of Okeanos'",
   "190 => ours=503400:'Queen of Sheba' theirs='Caster of Midrash'",
@@ -187,7 +187,6 @@ Array [
   "283 => ours=304400:'Yu Mei-ren' theirs='Yu Miaoy (Lancer)'",
   "285 => ours=104500:'Tomoe Gozen' theirs='Tomoe Gozen (Saber)'",
   "286 => ours=404100:'Murasaki Shikibu' theirs='Murasaki Shikibu (Rider)'",
-  "288 => ours=104400:'Saitou Hajime' theirs='Saito Hajime'",
   "292 => ours=1001000:'Ashiya Douman' theirs='Ashiya Doman'",
   "294 => ours=104600:'Ibuki-Douji' theirs='Ibuki Doji'",
   "299 => ours=604100:'Kiichi Hougen' theirs='Kiichi Hogen'",
@@ -205,19 +204,5 @@ Array [
   "324 => ours=305000:'Sakamoto Ryouma' theirs='Sakamoto Ryoma'",
   "326 => ours=404300:'Taikoubou' theirs='Tai Gong Wang'",
   "330 => ours=1001100:'Manannán mac Lir (Bazett)' theirs='Manannan mac Lir (Bazett)'",
-  "331 => ours=105300:'Trưng Sisters' theirs=''",
-  "332 => ours=1001200:'Taisui Xingjun' theirs=''",
-  "333 => ours=1001300:'Super Bunyan' theirs=''",
-  "334 => ours=504700:'Daikokuten' theirs=''",
-  "335 => ours=304900:'Mary Anning' theirs=''",
-  "336 => ours=404700:'Constantine XI' theirs=''",
-  "337 => ours=105200:'Charlemagne' theirs=''",
-  "338 => ours=104300:'Roland' theirs=''",
-  "339 => ours=704200:'Kriemhild' theirs=''",
-  "340 => ours=901300:'James Moriarty' theirs=''",
-  "341 => ours=305100:'Don Quixote' theirs=''",
-  "342 => ours=505100:'Zhang Jiao' theirs=''",
-  "343 => ours=404800:'Kyokutei Bakin' theirs=''",
-  "344 => ours=204600:'Minamoto no Tametomo' theirs=''",
 ]
 `;

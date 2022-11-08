@@ -4,6 +4,18 @@ import { promises as fs } from "fs";
 import { StringDecoder } from "string_decoder";
 import { spawn } from "child_process";
 
+const logMsg = (colour: string, level: string) => (message: string): void => {
+  const fullLevel = " ".repeat(5 - level.length) + level;
+  console.log(`\x1b[${colour};1m${fullLevel}\x1b[0m ${message}`);
+};
+
+export const log = {
+  step: logMsg("94", "STEP"),
+  info: logMsg("92", "INFO"),
+  warn: logMsg("93", "WARN"),
+  error: logMsg("91", "ERROR"),
+};
+
 /** Check if a file exists. */
 export const fileExists = async (path: string): Promise<boolean> => {
   try {
@@ -42,7 +54,7 @@ export const getAsString = (url: string): Promise<string> => new Promise((resolv
 export const getAsFile = async (url: string, path: string, force = false): Promise<void> => {
   if (await fileExists(path) && !force) return;
 
-  console.log(`Downloading ${url} to ${path}`);
+  log.info(`Downloading ${url} to ${path}`);
   await new Promise((resolve, reject) => {
     const doReject = async (e: unknown): Promise<void> => {
       await fs.unlink(path);
@@ -106,7 +118,7 @@ export const runTasksInParallel = async (tasks: TaskQueue, workers = 8): Promise
       await task();
       finished++;
       const finish = process.uptime();
-      if (finish - start > 0.1) console.log(`Run ${finished}/${started + tasks.length} tasks`);
+      if (finish - start > 0.1) log.info(`Run ${finished}/${started + tasks.length} tasks`);
     }
   };
 

@@ -1,13 +1,13 @@
-import { promises as fs } from "fs";
 import { createHash } from "crypto";
+import { promises as fs } from "fs";
 import { VM } from "vm2";
 
-import { TaskQueue, fileExists, getAsFile, getAsString, runCommand, runTasksInParallel } from "../support/node-extra";
+import type { DataDump, EventAppearance, GameEvent, Item, Servant } from "../data";
 import type { AtlasEvent, AtlasGrailCost, AtlasItem, AtlasServant, EventSummary, War } from "../data/atlas";
 import { Id, IdMap, Skill, UpgradeItem, UpgradeRequirements, makeId } from "../data/common";
-import type { DataDump, EventAppearance, GameEvent, Item, Servant } from "../data";
-import type { RowData, Spreadsheets } from "../data/sheets";
 import { expId, grailId, qpId } from "../data/constants";
+import type { RowData, Spreadsheets } from "../data/sheets";
+import { TaskQueue, fileExists, getAsFile, getAsString, log, runCommand, runTasksInParallel } from "../support/node-extra";
 
 const outDir = "_build/data";
 
@@ -24,7 +24,7 @@ const convertRangedMap = <T, U>(object: { [key: string]: T }, start: number, end
   for (let i = start; i <= end; i++) {
     const current = object[i];
     if (typeof current === "undefined") {
-      console.error(`Undefined key ${i} in object`, object);
+      log.error(`Undefined key ${i} in ${JSON.stringify(object)}`);
       process.exit(1);
     }
 
@@ -163,7 +163,7 @@ class Converter {
 
     for (let i = 0; i < this.expGrowth.length; i++) {
       if (this.expGrowth[i] !== jpServant.expGrowth[i]) {
-        console.warn(`Exp growth for ${name} does not match.`);
+        log.warn(`Exp growth for ${name} does not match.`);
         break;
       }
     }
@@ -240,7 +240,7 @@ const addDropData = (
     if (itemName) {
       currentItem = itemMap.get(itemName) ?? itemMap.get(dropNames[itemName]);
       if (!currentItem) {
-        console.warn(`Unknown item ${itemName}`);
+        log.warn(`Unknown item ${itemName}`);
       }
     }
     if (!currentItem) continue;
@@ -255,7 +255,7 @@ const addDropData = (
     if (!area || !quest || !link || typeof ap !== "number" || typeof ap_drop !== "number" || typeof drop !== "number") {
       // Don't warn if we're just an empty row.
       if (area && quest && area !== "Area" && quest !== "Quest") {
-        console.warn(`Invalid drops for ${currentItem.name}, skipping.`, { area, quest, link, ap, ap_drop, drop });
+        log.warn(`Invalid drops for ${currentItem.name}, skipping.`);
       }
       continue;
     }
@@ -320,21 +320,7 @@ const recomputeFgoSimIds = (servants: Array<Servant>): void => {
   }
 };
 
-void (async () => {
-  let skipVersionCheck = false, skipImageDownload = false;
-  for (let i = 2; i < process.argv.length; i++) {
-    const arg = process.argv[i];
-    if (arg === "--skip-version-check") {
-      skipVersionCheck = true;
-    } else if (arg === "--skip-image-download") {
-      skipImageDownload = true;
-    } else {
-      console.error(`Unknown argument ${arg}`);
-      process.exit(1);
-    }
-  }
-
-
+const main = async (skipVersionCheck: boolean, skipImageDownload: boolean): Promise<void> => {
   await fs.mkdir(outDir, { recursive: true });
 
   const versionFile = `${outDir}/version.json`;
@@ -349,6 +335,7 @@ void (async () => {
   const isNew = version !== newVersion;
 
   // Fetch data if available
+  log.step("Fetching data");
   await getAsFile("https://api.atlasacademy.io/export/JP/nice_servant_lang_en.json", `${outDir}/servants_jp.json`, isNew);
   await getAsFile("https://api.atlasacademy.io/export/NA/nice_servant.json", `${outDir}/servants_na.json`, isNew);
   await getAsFile("https://api.atlasacademy.io/export/JP/basic_event_lang_en.json", `${outDir}/events_jp.json`, isNew);
@@ -366,11 +353,12 @@ void (async () => {
     // We could fetch https://docs.google.com/spreadsheets/d/1_SlTjrVRTgHgfS7sRqx4CeJMqlz687HdSlYqiW-JvQA/gviz/tq?tqx=out:csv&sheet=Best%205%20AP%2FDrop%20%28NA%29 instead,
     // but it doesn't have formatting and so we cannot extract links.
   } else {
-    console.warn("SHEETS_KEY environment variable not present, skipping drop download");
+    log.warn("SHEETS_KEY environment variable not present, skipping drop download");
   }
   await fs.writeFile(versionFile, newVersion);
 
   // Merge the two data sources
+  log.step("Importing servants");
   const naServants = JSON.parse(await fs.readFile(`${outDir}/servants_na.json`, "utf-8")) as Array<AtlasServant>;
   const jpServants = JSON.parse(await fs.readFile(`${outDir}/servants_jp.json`, "utf-8")) as Array<AtlasServant>;
   const events = JSON.parse(await fs.readFile(`${outDir}/events_jp.json`, "utf-8")) as Array<EventSummary>;
@@ -433,9 +421,11 @@ void (async () => {
     });
   }
 
+  log.step("Downloading events and images");
   await runTasksInParallel(tasks);
 
   // Loop through all events and find rewards.
+  log.step("Processing events");
   const dateFormat = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium" });
   const usefulEvents: Array<GameEvent> = [];
   for (const event of recentEvents) {
@@ -448,7 +438,7 @@ void (async () => {
     const items = new Map<Id<"item">, EventAppearance>();
     for (const item of eventData.shop) {
       if (item.targetIds.length !== 1) {
-        console.warn(`Event '${name}' has shop item whose length !== 1.`);
+        log.warn(`Event '${name}' has shop item whose length !== 1.`);
         continue;
       }
 
@@ -460,7 +450,7 @@ void (async () => {
       for (const box of lottery.boxes) {
         if (box.boxIndex !== 10) continue;
         if (box.gifts.length !== 1) {
-          console.warn(`Event '${name}' has lottery whose length !== 1.`);
+          log.warn(`Event '${name}' has lottery whose length !== 1.`);
           continue;
         }
 
@@ -521,4 +511,26 @@ void (async () => {
   };
 
   await fs.writeFile(`${outDir}/dump.json`, JSON.stringify(result));
+  log.step("Finished!");
+};
+
+(() => {
+  let skipVersionCheck = false, skipImageDownload = false;
+  for (let i = 2; i < process.argv.length; i++) {
+    const arg = process.argv[i];
+    if (arg === "--skip-version-check") {
+      skipVersionCheck = true;
+    } else if (arg === "--skip-image-download") {
+      skipImageDownload = true;
+    } else {
+      log.error(`Unknown argument ${arg}`);
+      process.exit(1);
+    }
+  }
+
+  main(skipVersionCheck, skipImageDownload).catch((e: unknown) => {
+    if (e instanceof Error && e.stack) e = e.stack;
+    log.error(`${e || "unknown error"}`); // eslint-disable-line @typescript-eslint/restrict-template-expressions
+    process.exit(1);
+  });
 })();

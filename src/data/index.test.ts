@@ -9,7 +9,7 @@ const makeLookup = <K, V>(objs: Array<V>, keyFn: (o: V) => K): Map<K, V> => {
   return out;
 };
 
-const normaliseServant = (x : string): string => x.toLowerCase().replace(/-/g, " ");
+const normaliseServant = (x: string): string => x.toLowerCase().replace(/-/g, " ");
 
 test("Has a basic list of items", async () => {
   const store = await fsStore();
@@ -29,7 +29,8 @@ test("Includes webcrow IDs", async () => {
 
   const different: Array<string> = [];
   for (const servant of servants) {
-    const simServant = fgoSimById.get(servant.webcrowId)?.name ?? "";
+    const simServant = fgoSimById.get(servant.webcrowId)?.name;
+    if (simServant === undefined) continue;
 
     if (normaliseServant(simServant) === normaliseServant(servant.name)) continue;
     different.push(`${servant.webcrowId} => ours=${servant.id}:'${servant.name}' theirs='${simServant}'`);

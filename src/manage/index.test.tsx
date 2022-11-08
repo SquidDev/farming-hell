@@ -19,7 +19,7 @@ const newStoreAndServant = async (): Promise<[Store, OwnedServant]> => {
 jest.mock("react-fast-compare", () => {
   const module: typeof import("react-fast-compare") = jest.requireActual("react-fast-compare");
   return { __esModule: true, default: module };
-})
+});
 
 // Mock out some of the really noisy stuff
 jest.mock("./ServantSelect", () => ({
