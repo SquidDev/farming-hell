@@ -202,7 +202,7 @@ exports[`Includes webcrow IDs 1`] = `
   "318 => ours=704100:'Sei Shounagon' theirs='Sei Shonagon (Berserker)'",
   "321 => ours=404600:'Elisabeth Báthory (Cinderella)' theirs='Elizabeth Bathory (Cinderella)'",
   "324 => ours=305000:'Sakamoto Ryouma' theirs='Sakamoto Ryoma'",
-  "326 => ours=404300:'Taikoubou' theirs='Tai Gong Wang'",
+  "326 => ours=404300:'Taigong Wang' theirs='Tai Gong Wang'",
   "330 => ours=1001100:'Manannán mac Lir (Bazett)' theirs='Manannan mac Lir (Bazett)'",
 ]
 `;
