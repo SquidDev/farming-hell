@@ -160,12 +160,11 @@ const copyPlugin = srcGlob => ({
   // tiny-case ships a broken tsconfig.json file which breaks esbuild
   try {
     await fs.unlink("node_modules/tiny-case/tsconfig.json")
-  } catch {}
+  } catch { }
 
-  await esbuild.build({
+  const context = await esbuild.context({
     logLevel: "info",
     metafile: true,
-    watch,
 
     // Input options
     entryPoints: ['src/index.tsx'],
@@ -194,5 +193,12 @@ const copyPlugin = srcGlob => ({
     entryNames: "[name]-[hash]",
     legalComments: "none",
     target: "es6",
-  })
+  });
+  if (watch) {
+    await context.watch();
+  }
+  else {
+    await context.rebuild();
+    await context.dispose();
+  }
 })().catch(() => process.exit(1))
