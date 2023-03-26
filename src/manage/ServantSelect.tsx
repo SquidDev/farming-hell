@@ -55,7 +55,7 @@ const ServantSelect: FunctionComponent<{ name: string, className: string, servan
 
   return <Combobox value={currentServant} onChange={x => helpers.setValue(x ? `${x.id}` : "")}>{({ open }) => <>
     <div className={classNames("relative", className)}>
-      <Combobox.Input<"input", Servant | undefined>
+      <Combobox.Input<Servant | undefined, "input">
         onChange={event => setQuery(event.target.value)}
         displayValue={x => x ? x.name : ""}
         onFocus={e => e.target.setSelectionRange(0, e.target.value.length)}

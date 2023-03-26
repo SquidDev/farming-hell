@@ -53,9 +53,9 @@ const SkillInput: FunctionComponent<{ path: string, skill?: Array<Skill>, succes
   return <TargetInput path={path} successStyle={successStyle} placeholder={placeholder}>
     {skill
       ? skill.map(skill => <div key={skill.id}>
-        <h3 className="text-lg font-semibold">{skill.name}</h3>
+        <h3 className="text-md font-semibold">{skill.name}</h3>
         <div className="flex">
-          <Icon className="mr-3 mb-3 w-12 h-12" src={skill.icon} alt={skill.name} />
+          <Icon className="mr-2 mb-2 w-8 h-8" src={skill.icon} alt={skill.name} />
           <p>{skill.detail}</p>
         </div>
       </div>)

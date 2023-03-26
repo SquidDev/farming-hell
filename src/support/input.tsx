@@ -1,16 +1,11 @@
-import { Field, FieldAttributes, FormikProps, GenericFieldHTMLAttributes, useField } from "formik";
-import Tooltip from "rc-tooltip";
-import "rc-tooltip/assets/bootstrap.css";
-import { FunctionComponent, ReactNode, forwardRef, useEffect, useRef } from "react";
+import { useFloating, offset, flip, shift } from '@floating-ui/react-dom';
+import { Field, FormikProps, GenericFieldHTMLAttributes, useField } from "formik";
+import { FunctionComponent, ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import isEqual from "react-fast-compare";
 
 import { classNames } from "./utils";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const RefField: FunctionComponent<FieldAttributes<any>> = forwardRef(function RefField(props, ref) {
-  return <Field innerRef={ref} {...props} />;
-});
-
+const floatingMiddleware = [offset(12), flip(), shift()];
 /**
  * Custom text input control for Formik. This displays error validation messages
  * within a tooltip (which displays on focus) as well as any other custom
@@ -22,24 +17,41 @@ export const Input: FunctionComponent<{
 } & GenericFieldHTMLAttributes> = ({ name, children, className: classes, ...props }) => {
   const [_field, meta, _helpers] = useField<string>(name);
 
-  return <Tooltip
-    trigger='focus'
-    overlay={() => <>
-      {meta.error ? <p className="font-semibold text-red-600 pb-1">{meta.error}</p> : undefined}
-      {children}
-    </>}
-    placement='bottom'
-    // @ts-ignore: Types for Tooltip are incomplete.
-    blurDelay={0}
-  >
-    <RefField
+  const [isOpen, setIsOpen] = useState(false);
+  const context = useFloating({
+    placement: "bottom",
+    open: isOpen,
+    middleware: floatingMiddleware,
+  });
+  const onFocus = useCallback((e: FocusEvent) => setIsOpen(e.type === "focus"), [setIsOpen]);
+
+  return <>
+    <Field
       name={name}
+      innerRef={context.refs.setReference}
       className={classNames(
         "border focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400",
         classes,
         meta.error ? "border-red-600" : "border-gray-300"
-      )} {...props} />
-  </Tooltip>;
+      )}
+      onFocus={onFocus}
+      onBlur={onFocus}
+      {...props}
+    />
+    {isOpen && <div
+      ref={context.refs.setFloating}
+      className="z-50 bg-gray-900 bg-opacity-80 text-white text-xs w-max max-w-lg p-2 rounded"
+      style={{
+        position: context.strategy,
+        left: context.x ?? 0,
+        top: context.y ?? 0,
+        width: 'max-content',
+      }}
+    >
+      {meta.error ? <p className="font-semibold text-red-600 pb-1">{meta.error}</p> : undefined}
+      {children}
+    </div>}
+  </>
 };
 
 /**
