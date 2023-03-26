@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { FunctionComponent, ReactNode, Reducer, useCallback, useReducer } from "react";
+import { FunctionComponent, ReactNode, Reducer, useCallback, useMemo, useReducer } from "react";
 import * as yup from "yup";
 import { Formik } from "formik";
 import { action } from "mobx";
@@ -134,27 +134,25 @@ const ValueWithNeeded: FunctionComponent<{ owned: number, needed: number, value:
 
 const RequiredItem: FunctionComponent<{
   item: Item, store: Store,
-  requirements: Requirements, highPriority: Requirements, mediumPriority: Requirements, lowPriority: Requirements,
+  requirements: number, highPriority: number, mediumPriority: number, lowPriority: number,
   getter: (r: Requirements) => number,
 }> = observer(({ item, store, requirements, highPriority, mediumPriority, lowPriority, getter }) => {
-  const requirementsVal = getter(requirements);
-  const highPriorityVal = getter(highPriority);
-  const mediumPriorityVal = getter(mediumPriority);
-  const lowPriorityVal = getter(lowPriority);
-
   const owned = store.ownedItems.get(item.id);
   const ownedVal = owned ?? 0;
 
+  const initialValues = useMemo(() => ({ count: owned }), [owned]);
+  const onSubmit = useMemo(() => action<(f: OwnedItem) => void>(values => {
+    const { count } = ownedItem.validateSync(values) ;
+    if (count === undefined) {
+      store.ownedItems.delete(item.id);
+    } else {
+      store.ownedItems.set(item.id, count);
+    }
+  }), [store, item]);
+
   return <Formik
-    initialValues={{ count: owned }}
-    onSubmit={action<(f: OwnedItem) => void>(values => {
-      const { count } = ownedItem.validateSync(values) ;
-      if (count === undefined) {
-        store.ownedItems.delete(item.id);
-      } else {
-        store.ownedItems.set(item.id, count);
-      }
-    })}
+    initialValues={initialValues}
+    onSubmit={onSubmit}
     validateOnChange={true}
     validationSchema={ownedItem}
   >{form =>
@@ -172,10 +170,10 @@ const RequiredItem: FunctionComponent<{
             Have fun farming! {/* Look, this is only here because we need some content. */}
             </Input>
           </td>
-          <ValueWithNeeded owned={ownedVal} needed={requirementsVal} value={requirementsVal} />
-          <ValueWithNeeded owned={ownedVal} needed={highPriorityVal} value={highPriorityVal} />
-          <ValueWithNeeded owned={ownedVal} needed={highPriorityVal + mediumPriorityVal} value={mediumPriorityVal} />
-          <ValueWithNeeded owned={ownedVal} needed={highPriorityVal + mediumPriorityVal + lowPriorityVal} value={lowPriorityVal} />
+          <ValueWithNeeded owned={ownedVal} needed={requirements} value={requirements} />
+          <ValueWithNeeded owned={ownedVal} needed={highPriority} value={highPriority} />
+          <ValueWithNeeded owned={ownedVal} needed={highPriority + mediumPriority} value={mediumPriority} />
+          <ValueWithNeeded owned={ownedVal} needed={highPriority + mediumPriority + lowPriority} value={lowPriority} />
         </tr>
         <Disclosure.Panel as="tr">
           <td colSpan={6}>
@@ -272,7 +270,7 @@ const RequirementTable: FunctionComponent<{ store: Store }> = observer(function 
 
           return <RequiredItem
             key={item.id} store={store} item={item} getter={getter}
-            requirements={requirements} highPriority={highPriority} mediumPriority={mediumPriority} lowPriority={lowPriority} />;
+            requirements={getter(requirements)} highPriority={getter(highPriority)} mediumPriority={getter(mediumPriority)} lowPriority={getter(lowPriority)} />;
         })}
       </tbody>
     </table>
