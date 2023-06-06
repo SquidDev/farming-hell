@@ -2,16 +2,19 @@ import type { FunctionComponent } from "react";
 
 import type { Store } from "../store";
 import type { Id } from "../data";
-import { Icon } from "../support/utils";
+import { classNames, Icon } from "../support/utils";
 import { expId, qpId } from "../data/constants";
 
 
 /** Displays an item and how much of it it is required in small text on-top. */
-export const ItemWithAmount: FunctionComponent<{ item: Id<"item">, store: Store, amount: number | string }> = ({ item, store, amount }) => {
+export const ItemWithAmount: FunctionComponent<{ item: Id<"item">, store: Store, amount: number | string, difference?: boolean }> = ({ item, store, amount, difference }) => {
   const itemDetails = store.itemLookup.get(item)!;
   return <div className="w-12 h-12 inline-block relative" title={itemDetails.name}>
     <Icon src={itemDetails.icon} alt={itemDetails.name} title={itemDetails.name} className="w-12 h-12" />
-    <span className={"absolute bottom-0 right-0 text-ring text-white"}>{amount}</span>
+    <span className={classNames(
+      "absolute bottom-0 right-0 text-ring",
+      difference ? (amount < 0 ? "text-red-400" : "text-green-400") : "text-white"
+    )}>{amount}</span>
   </div>;
 };
 

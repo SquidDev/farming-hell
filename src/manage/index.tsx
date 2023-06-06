@@ -6,7 +6,7 @@ import Sortable, { SortableEvent } from "sortablejs";
 
 import { CardColour, Filters, OwnedServant, Priority, Servant, Skill, Target } from "../data";
 import { ownedServant } from "../data/schema";
-import { ShortServantRequirements } from "../items/requirements";
+import { ShortServantRequirements, ShowDifference } from "../items/requirements";
 import { Store, newServant } from "../store";
 import { matchesFilter } from "../store/filter";
 import WrappedDialog, { DialogButton, DialogTitle } from "../support/dialog";
@@ -315,8 +315,21 @@ const ServantInputs: FunctionComponent<{ store: Store, openDialogue: (r: JSX.Ele
     store.ownedServants.splice(to, 0, store.ownedServants.splice(from, 1)[0]);
   }), [store]);
 
-  const ref = useRef<HTMLDivElement>(null);
+  const [difference, setDifference] = useState(false);
 
+  useEffect(() => {
+    const handler = (event: KeyboardEvent): void => {
+      if(event.code == "ShiftLeft" || event.code == "ShiftRight") setDifference(event.type == "keydown");
+    };
+    window.addEventListener("keydown", handler);
+    window.addEventListener("keyup", handler);
+    return () => {
+      window.removeEventListener("keydown", handler);
+      window.removeEventListener("keyup", handler);
+    };
+  }, []);
+
+  const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (ref.current === null) return undefined;
     const sort = Sortable.create(ref.current, {
@@ -328,14 +341,14 @@ const ServantInputs: FunctionComponent<{ store: Store, openDialogue: (r: JSX.Ele
     return () => sort.destroy();
   }, [ref, move]);
 
-  return <>
+  return <ShowDifference.Provider value={difference}>
     <ServantFilter store={store} />
     <div className="grid md:grid-cols-[repeat(auto-fit,minmax(25em,1fr))] grid-cols-1 gap-4 p-6 lg:p-0 lg:py-4 container mx-auto" ref={ref}>
       {store.ownedServants.map(s => <ServantInputContainer key={s.uid} servant={s} store={store} />)}
       <NewServantButton store={store} />
       {store.ownedServants.length === 0 && <NewServantPrompt openDialogue={openDialogue} />}
     </div>
-  </>;
+  </ShowDifference.Provider>;
 });
 
 export default ServantInputs;
