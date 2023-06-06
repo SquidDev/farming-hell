@@ -1,6 +1,6 @@
 import { useFloating, offset, flip, shift } from '@floating-ui/react-dom';
-import { Field, FormikProps, GenericFieldHTMLAttributes, useField } from "formik";
-import { FunctionComponent, ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { Field, type FormikProps, type GenericFieldHTMLAttributes, useField } from "formik";
+import { type FunctionComponent, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import isEqual from "react-fast-compare";
 
 import { classNames } from "./utils";

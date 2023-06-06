@@ -1,4 +1,4 @@
-import { Id, makeId } from "./index";
+import { type Id, makeId } from "./index";
 
 export const qpId: Id<"item"> = makeId("item", 1);
 export const grailId: Id<"item"> = makeId("item", 7999);

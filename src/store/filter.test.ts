@@ -1,5 +1,5 @@
 import { newServant } from ".";
-import { OwnedServant, Priority } from "../data";
+import { type OwnedServant, Priority } from "../data";
 import { defaultFilters, matchesFilter } from "./filter";
 
 test("Servants are filtered based on priority", () => {

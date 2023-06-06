@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, FunctionComponent, ReactNode } from "react";
+import { Fragment, type FunctionComponent, type ReactNode } from "react";
 
 import { classNames } from "./utils";
 

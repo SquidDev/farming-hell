@@ -1,4 +1,4 @@
-import { Filters, OwnedServant, Priority, Target } from "../data";
+import { type Filters, type OwnedServant, Priority, type Target } from "../data";
 
 export const defaultFilters: Filters = Object.freeze({
   maxed: true,

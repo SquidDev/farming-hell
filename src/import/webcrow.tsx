@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback, useRef, useState } from "react";
+import { type FunctionComponent, useCallback, useRef, useState } from "react";
 
 import type { Store } from "../store";
 import { read, write } from "../store/formats/webcrow";

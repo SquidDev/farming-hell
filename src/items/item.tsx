@@ -7,7 +7,7 @@ import { expId, qpId } from "../data/constants";
 
 
 /** Displays an item and how much of it it is required in small text on-top. */
-export const ItemWithAmount: FunctionComponent<{ item: Id<"item">, store: Store, amount: number | string, difference?: boolean }> = ({ item, store, amount, difference }) => {
+export const ItemWithAmount: FunctionComponent<{ item: Id<"item">, store: Store, amount: number, difference?: boolean }> = ({ item, store, amount, difference }) => {
   const itemDetails = store.itemLookup.get(item)!;
   return <div className="w-12 h-12 inline-block relative" title={itemDetails.name}>
     <Icon src={itemDetails.icon} alt={itemDetails.name} title={itemDetails.name} className="w-12 h-12" />

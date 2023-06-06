@@ -4,10 +4,10 @@ import { VM } from "vm2";
 
 import type { DataDump, EventAppearance, GameEvent, Item, Servant } from "../data";
 import type { AtlasEvent, AtlasGrailCost, AtlasItem, AtlasServant, EventSummary, War } from "../data/atlas";
-import { Id, IdMap, Skill, UpgradeItem, UpgradeRequirements, makeId } from "../data/common";
+import { type Id, type IdMap, type Skill, type UpgradeItem, type UpgradeRequirements, makeId } from "../data/common";
 import { expId, grailId, qpId } from "../data/constants";
 import type { RowData, Spreadsheets } from "../data/sheets";
-import { TaskQueue, fileExists, getAsFile, getAsString, log, runCommand, runTasksInParallel } from "../support/node-extra";
+import { type TaskQueue, fileExists, getAsFile, getAsString, log, runCommand, runTasksInParallel } from "../support/node-extra";
 
 const outDir = "_build/data";
 

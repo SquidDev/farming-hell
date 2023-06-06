@@ -9,7 +9,7 @@
 import { runInAction, toJS } from "mobx";
 
 import type { Store } from "..";
-import { Filters, Id, OwnedServant, makeId } from "../../data";
+import { type Filters, type Id, type OwnedServant, makeId } from "../../data";
 import { qpId } from "../../data/constants";
 import { defaultFilters } from "../filter";
 

@@ -1,8 +1,8 @@
 import { useField } from "formik";
-import { FunctionComponent, ReactNode, useState } from "react";
+import { type FunctionComponent, type ReactNode, useState } from "react";
 import { Combobox } from "@headlessui/react";
 
-import { IdMap, Servant, makeId } from "../data";
+import { type IdMap, type Servant, makeId } from "../data";
 import { classNames } from "../support/utils";
 
 const makeServants = (query: string, servants: IdMap<Servant>): ReactNode => {

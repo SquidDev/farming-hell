@@ -1,15 +1,15 @@
 import { observer } from "mobx-react-lite";
-import { FunctionComponent, ReactNode, Reducer, useCallback, useMemo, useReducer } from "react";
+import { type FunctionComponent, type ReactNode, type Reducer, useCallback, useMemo, useReducer } from "react";
 import * as yup from "yup";
 import { Formik } from "formik";
 import { action } from "mobx";
 import { Disclosure, Tab } from "@headlessui/react";
 
 import type { Store } from "../store";
-import { Item, Priority } from "../data";
+import { type Item, Priority } from "../data";
 import { ExternalLink, Icon, classNames } from "../support/utils";
 import { formatValue } from "./item";
-import { Requirements, addSplitServantRequirements, newRequirements } from "../data/requirements";
+import { type Requirements, addSplitServantRequirements, newRequirements } from "../data/requirements";
 import { Input, SubmitOnChange } from "../support/input";
 
 type OwnedItem = { count?: number }

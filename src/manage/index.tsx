@@ -1,10 +1,10 @@
 import { Field, Formik, useField } from "formik";
 import { action, toJS } from "mobx";
 import { observer } from "mobx-react-lite";
-import { FunctionComponent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import Sortable, { SortableEvent } from "sortablejs";
+import { type FunctionComponent, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import Sortable, { type SortableEvent } from "sortablejs";
 
-import { CardColour, Filters, OwnedServant, Priority, Servant, Skill, Target } from "../data";
+import { type CardColour, type Filters, type OwnedServant, Priority, type Servant, type Skill, type Target } from "../data";
 import { ownedServant } from "../data/schema";
 import { ShortServantRequirements, ShowDifference } from "../items/requirements";
 import { Store, newServant } from "../store";

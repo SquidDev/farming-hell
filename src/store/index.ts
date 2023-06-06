@@ -1,8 +1,11 @@
 import { autorun, configure, makeAutoObservable } from "mobx";
 import { v4 as uuidV4 } from "uuid";
 
-import { DataDump, Filters, GameEvent, GrailCosts, Id, IdMap, Item, OwnedServant, Priority, Servant, makeId } from "../data";
-import { Requirements, addServantRequirements, newRequirements } from "../data/requirements";
+import {
+  type DataDump, type Filters, type GameEvent, type GrailCosts, type Id, type IdMap, type Item, type OwnedServant,
+  Priority, type Servant, makeId
+} from "../data";
+import { type Requirements, addServantRequirements, newRequirements } from "../data/requirements";
 import { defaultFilters } from "./filter";
 import { expId, qpId } from "../data/constants";
 import { read, write } from "./formats/json";

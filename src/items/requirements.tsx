@@ -2,7 +2,7 @@ import { useContext, createContext, type FunctionComponent, type ReactElement } 
 import { observer } from "mobx-react-lite";
 
 import { byPriority } from "../data/order";
-import { Requirements, addServantRequirements, newRequirements } from "../data/requirements";
+import { type Requirements, addServantRequirements, newRequirements } from "../data/requirements";
 import type { Store } from "../store";
 import type { OwnedServant } from "../data";
 import { EmberWithAmount, ItemWithAmount, QPWithAmount } from "./item";

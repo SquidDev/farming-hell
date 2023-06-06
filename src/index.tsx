@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode, StrictMode, useCallback, useEffect, useState } from "react";
+import { type FunctionComponent, type ReactNode, StrictMode, useCallback, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Menu, Tab } from "@headlessui/react";
 
