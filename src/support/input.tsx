@@ -1,4 +1,4 @@
-import { useFloating, offset, flip, shift } from '@floating-ui/react-dom';
+import { useFloating, offset, flip, shift } from "@floating-ui/react-dom";
 import { Field, type FormikProps, type GenericFieldHTMLAttributes, useField } from "formik";
 import { type FunctionComponent, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import isEqual from "react-fast-compare";
@@ -45,7 +45,7 @@ export const Input: FunctionComponent<{
         position: context.strategy,
         left: context.x ?? 0,
         top: context.y ?? 0,
-        width: 'max-content',
+        width: "max-content",
       }}
     >
       {meta.error ? <p className="font-semibold text-red-600 pb-1">{meta.error}</p> : undefined}

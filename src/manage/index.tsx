@@ -163,9 +163,10 @@ export const ServantInput: FunctionComponent<{ servant: OwnedServant, store: Sto
   const npStyle = npStyles[servantDetails?.npType ?? "arts"];
 
   const inferredAscension = servantDetails !== undefined ? getAscensionTarget(servantDetails, storeServant) : placeholderOne;
-  const ascension = servantDetails && inferredAscension && (inferredAscension.current
-    && servantDetails.ascensions[ascensionMapping[inferredAscension.current]]
-    || servantDetails.ascensions[0]);
+  const ascension = servantDetails && (
+    (inferredAscension?.current && servantDetails.ascensions[ascensionMapping[inferredAscension.current]])
+    ?? servantDetails.ascensions[0]
+  );
 
   return <Formik
     initialValues={formServant}
@@ -319,7 +320,7 @@ const ServantInputs: FunctionComponent<{ store: Store, openDialogue: (r: JSX.Ele
 
   useEffect(() => {
     const handler = (event: KeyboardEvent): void => {
-      if(event.code == "ShiftLeft" || event.code == "ShiftRight") setDifference(event.type == "keydown");
+      if(event.code === "ShiftLeft" || event.code === "ShiftRight") setDifference(event.type === "keydown");
     };
     window.addEventListener("keydown", handler);
     window.addEventListener("keyup", handler);

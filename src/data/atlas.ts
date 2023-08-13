@@ -40,17 +40,17 @@ export type AtlasServant = {
   extraAssets: {
     faces: {
       /** A mapping containing keys "1".."4" where each  */
-      ascension: { [key: string]: string },
+      ascension: Record<string, string>,
     },
   },
   coin: { item: AtlasItem },
 
   /** Materials required to ascend. Contains "0".."3". */
-  ascensionMaterials: { [key: string]: UpgradeRequirements<AtlasItem> },
+  ascensionMaterials: Record<string, UpgradeRequirements<AtlasItem>>,
 
   /** Materials required to upgrade skills. Contains "1".."9". */
-  skillMaterials: { [key: string]: UpgradeRequirements<AtlasItem> },
-  appendSkillMaterials: { [key: string]: UpgradeRequirements<AtlasItem> },
+  skillMaterials: Record<string, UpgradeRequirements<AtlasItem>>,
+  appendSkillMaterials: Record<string, UpgradeRequirements<AtlasItem>>,
   skills: Array<Skill & { num: number }>,
   appendPassive: Array<AppendSkill>,
   expGrowth: Array<number>,
@@ -58,7 +58,7 @@ export type AtlasServant = {
 
   ascensionAdd: {
     lvMax: {
-      ascension: { [key: number]: number },
+      ascension: Record<number, number>,
     },
   },
 

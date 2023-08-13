@@ -16,7 +16,7 @@ export const ShortRequirements: FunctionComponent<{ requirements: Requirements, 
 
   const itemList: Array<ReactElement<unknown>> = [...items.keys()].sort(byPriority(store.itemLookup)).map(key => {
     let amount = items.get(key)!;
-    if (showDifference) amount = (ownedItems.get(key) || 0) - amount;
+    if (showDifference) amount = (ownedItems.get(key) ?? 0) - amount;
     return <ItemWithAmount key={key} item={key} store={store} amount={amount} difference={showDifference} />;
   });
   return <>

@@ -44,7 +44,7 @@ export const read = (store: Store, data: string): void => {
     throw "Malformed JSON";
   }
 
-  const lookup: Map<number, Servant> = new Map();
+  const lookup = new Map<number, Servant>();
   for (const object of store.servants) lookup.set(object.webcrowId, object);
 
   const servants = servantSchema.validateSync(json, { strict: true });

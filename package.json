@@ -20,16 +20,17 @@
   "author": "SquidDev",
   "license": "BSD-3-Clause",
   "devDependencies": {
+    "@types/hoist-non-react-statics": "^3.3.1",
     "@types/jest": "^29.0.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@types/react-test-renderer": "^18.0.0",
     "@types/sortablejs": "^1.10.7",
     "@types/uuid": "^9.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.3.0",
-    "@typescript-eslint/parser": "^5.3.0",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
     "autoprefixer": "^10.3.1",
-    "esbuild": "^0.17.0",
+    "esbuild": "^0.19.1",
     "eslint": "^8.2.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-react": "^7.26.1",
@@ -43,19 +44,18 @@
     "typescript": "^5.1.0"
   },
   "dependencies": {
-    "@floating-ui/react-dom": "^1.3.0",
+    "@floating-ui/react-dom": "^2.0.0",
     "@headlessui/react": "^1.6.3",
     "@welldone-software/why-did-you-render": "^7.0.0",
     "formik": "^2.2.9",
-    "mobx": "^6.3.2",
-    "mobx-react-lite": "^3.2.0",
+    "mobx": "^6.9.0",
+    "mobx-react-lite": "^4.0.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-fast-compare": "^3.2.0",
     "sortablejs": "^1.14.0",
     "tailwindcss": "^3.0.0",
     "uuid": "^9.0.0",
-    "vm2": "^3.9.8",
     "yup": "^1.0.0-beta.8"
   }
 }

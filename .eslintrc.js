@@ -82,14 +82,15 @@ module.exports = {
       parser: "@typescript-eslint/parser",
       parserOptions: {
         tsconfigRootDir: __dirname,
-        project: ["./tsconfig.json"],
+        project: true,
       },
       plugins: [
         "@typescript-eslint",
       ],
       extends: [
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended-type-checked",
+        "plugin:@typescript-eslint/stylistic-type-checked",
         "plugin:import/typescript",
       ],
       rules: {
@@ -98,6 +99,9 @@ module.exports = {
           multiline: { delimiter: "comma" },
           singleline: { delimiter: "comma" },
         }],
+        "@typescript-eslint/array-type": ["warn", { default: "generic" }],
+        "@typescript-eslint/consistent-type-definitions": "off",
+        "@typescript-eslint/consistent-indexed-object-style": "warn", // Useful, but not always!
 
         // Semantics
         "@typescript-eslint/explicit-function-return-type": ["warn", { allowExpressions: true }],

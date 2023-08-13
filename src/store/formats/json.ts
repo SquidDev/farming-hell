@@ -28,8 +28,8 @@ type Schemas
 
 const readImpl = (store: Store, data: Schemas): void => {
   let servants: Array<PartialOwnedServant> = [];
-  const items: Map<Id<"item">, number> = new Map();
-  let filters: Filters = defaultFilters;
+  const items = new Map<Id<"item">, number>();
+  let filters = defaultFilters;
 
   if (data instanceof Array) {
     servants = data;

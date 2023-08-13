@@ -49,7 +49,7 @@ export class Store {
   public readonly grailCosts: GrailCosts;
 
   public ownedServants: Array<OwnedServant> = [];
-  public ownedItems: Map<Id<"item">, number> = new Map();
+  public ownedItems: Map<Id<"item">, number> = new Map<Id<"item">, number>();
   public filters: Filters = defaultFilters;
 
   constructor({ servants, items, events, expGrowth, grailCosts }: DataDump) {

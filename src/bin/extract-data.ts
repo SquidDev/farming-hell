@@ -1,6 +1,5 @@
 import { createHash } from "crypto";
 import { promises as fs } from "fs";
-import { VM } from "vm2";
 
 import type { DataDump, EventAppearance, GameEvent, Item, Servant } from "../data";
 import type { AtlasEvent, AtlasGrailCost, AtlasItem, AtlasServant, EventSummary, War } from "../data/atlas";
@@ -10,8 +9,6 @@ import type { RowData, Spreadsheets } from "../data/sheets";
 import { type TaskQueue, fileExists, getAsFile, getAsString, log, runCommand, runTasksInParallel } from "../support/node-extra";
 
 const outDir = "_build/data";
-
-const enableFgoSim = false;
 
 const convertOptRangedMap = <T, U>(object: { [key: string]: T }, start: number, end: number, f: (x: T | undefined) => U): Array<U> => {
   const out: Array<U> = [];
@@ -264,17 +261,6 @@ const addDropData = (
   }
 };
 
-/** Load in the servant DB from FGO Material Simulator and write the resulting IDs. */
-const extractFgoSim = async (): Promise<void> => {
-  const vm = new VM({ eval: false, wasm: false, allowAsync: false, timeout: 500 });
-  vm.run("$ = () => {};");
-  vm.runFile(`${outDir}/fgo_sim.js`);
-  const servants = vm.getGlobal("Servantdb") as Array<{ id: number, text2: string }>;
-  const processedServants = servants.map(x => ({ id: x.id, name: x.text2.replace(/\s+/g, " ") }));
-
-  await fs.writeFile(`${outDir}/fgo_sim.json`, JSON.stringify(processedServants));
-};
-
 /**
  * Compute FGO Material Simulator ids. These appear to be manually assigned, and so are often inconsistent with FGO's
  * internal ids, so we need to do some remapping.
@@ -341,7 +327,6 @@ const main = async (skipVersionCheck: boolean, skipImageDownload: boolean): Prom
   await getAsFile("https://api.atlasacademy.io/export/JP/basic_event_lang_en.json", `${outDir}/events_jp.json`, isNew);
   await getAsFile("https://api.atlasacademy.io/export/NA/nice_item.json", `${outDir}/items_na.json`, isNew);
   await getAsFile("https://api.atlasacademy.io/export/JP/NiceSvtGrailCost.json", `${outDir}/grail_jp.json`, isNew);
-  if (enableFgoSim) await getAsFile("http://fgosimulator.webcrow.jp/Material/js/fgos_material.min.js", `${outDir}/fgo_sim.js`, isNew);
 
   const sheetsKey = process.env.SHEETS_KEY;
   if (sheetsKey) {
@@ -494,9 +479,6 @@ const main = async (skipVersionCheck: boolean, skipImageDownload: boolean): Prom
     addDropData(itemNames, spreadsheet.sheets[0].data[0].rowData, 2);
     addDropData(itemNames, spreadsheet.sheets[0].data[0].rowData, 18);
   }
-
-  // Extract additional data for tests
-  if (enableFgoSim) await extractFgoSim();
 
   const result: DataDump = {
     servants: servants.sort((a, b) => {

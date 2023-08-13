@@ -1,6 +1,5 @@
-/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
+/** @type {import('ts-jest/dist/types').JestConfigWithTsJest} */
 module.exports = {
-  preset: "ts-jest",
   testEnvironment: "node",
   collectCoverage: true,
   roots: ["src"],
@@ -8,4 +7,8 @@ module.exports = {
   moduleNameMapper: {
     "^.+\\.(css|png)$": "<rootDir>/src/test/stub.ts"
   },
+  transform: {
+    ".ts": ["ts-jest", { tsconfig: "./tsconfig.test.json" }],
+    ".tsx": ["ts-jest", { tsconfig: "./tsconfig.test.json" }],
+  }
 };

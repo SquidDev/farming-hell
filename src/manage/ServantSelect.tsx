@@ -53,7 +53,7 @@ const ServantSelect: FunctionComponent<{ name: string, className: string, servan
   const id = parseInt(field.value);
   const currentServant: Servant | undefined = id === id ? servants.get(makeId("servant", id)) : undefined;
 
-  return <Combobox value={currentServant} onChange={x => helpers.setValue(x ? `${x.id}` : "")}>{({ open }) => <>
+  return <Combobox value={currentServant} onChange={x => void helpers.setValue(x ? `${x.id}` : "")}>{({ open }) => <>
     <div className={classNames("relative", className)}>
       <Combobox.Input<Servant | undefined, "input">
         onChange={event => setQuery(event.target.value)}
