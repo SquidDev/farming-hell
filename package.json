@@ -7,8 +7,8 @@
     "build": "npm run -s build:data-quick && npm run -s build:typecheck && npm run -s build:esbuild",
     "build:typecheck": "tsc --noEmit -p tsconfig.json",
     "build:esbuild": "node ./esbuild.mjs --production",
-    "build:data-full": "ts-node -T --esm src/bin/extract-data.ts",
-    "build:data-quick": "ts-node -T --esm src/bin/extract-data.ts --skip-version-check --skip-image-download",
+    "build:data-full": "tsx src/bin/extract-data.ts",
+    "build:data-quick": "tsx src/bin/extract-data.ts --skip-version-check --skip-image-download",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "watch": "node ./esbuild.mjs --watch",
@@ -40,7 +40,7 @@
     "postcss": "^8.3.6",
     "react-test-renderer": "^18.1.0",
     "ts-jest": "^29.0.0",
-    "ts-node": "^10.9.1",
+    "tsx": "^3.12.10",
     "typescript": "^5.1.0"
   },
   "dependencies": {

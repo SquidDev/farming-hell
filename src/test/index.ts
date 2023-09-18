@@ -5,7 +5,7 @@ import { Store } from "../store";
 import type { DataDump } from "../data";
 
 const updateImage = (name: string): string =>
-  name.charAt(0) === "/" ? name : `/${createHash("md5").update(name).digest("hex")}.png`;
+  name.startsWith("/") ? name : `/${createHash("md5").update(name).digest("hex")}.png`;
 
 export const fsStore = async (): Promise<Store> => {
   const data = JSON.parse(await fs.readFile("_build/data/dump.json", "utf-8")) as DataDump;

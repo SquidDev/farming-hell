@@ -95,6 +95,14 @@ export type AtlasEvent = {
   missions: Array<{
     gifts: Array<Reward>,
   }>,
+  rewards: Array<{
+    gifts: Array<Reward>,
+  }>,
+  treasureBoxes: Array<{
+    treasureBoxGifts: Array<{
+      gifts: Array<Reward>,
+    }>,
+  }>,
 }
 
 export type AtlasGrailCost = {

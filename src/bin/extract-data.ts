@@ -10,13 +10,13 @@ import { type TaskQueue, fileExists, getAsFile, getAsString, log, runCommand, ru
 
 const outDir = "_build/data";
 
-const convertOptRangedMap = <T, U>(object: { [key: string]: T }, start: number, end: number, f: (x: T | undefined) => U): Array<U> => {
+const convertOptRangedMap = <T, U>(object: Record<string, T>, start: number, end: number, f: (x: T | undefined) => U): Array<U> => {
   const out: Array<U> = [];
   for (let i = start; i <= end; i++) out.push(f(object[i]));
   return out;
 };
 
-const convertRangedMap = <T, U>(object: { [key: string]: T }, start: number, end: number, f: (x: T) => U): Array<U> => {
+const convertRangedMap = <T, U>(object: Record<string, T>, start: number, end: number, f: (x: T) => U): Array<U> => {
   const out: Array<U> = [];
   for (let i = start; i <= end; i++) {
     const current = object[i];
@@ -217,7 +217,7 @@ const addShopItem = (
 };
 
 /** Map Drop spreadsheet names to Atlas ones. */
-const dropNames: { [key: string]: string } = {
+const dropNames: Record<string, string> = {
   "Small Bells of Amnesty": "Small Bell of Amnesty",
   "Octuplet Crystal": "Octuplet Crystals",
   "Moonlit Tiara": "Shining Silver Crown",
@@ -451,6 +451,22 @@ const main = async (skipVersionCheck: boolean, skipImageDownload: boolean): Prom
     }
 
     items.clear();
+    for (const ladderItem of eventData.rewards) {
+      for (const reward of ladderItem.gifts) {
+        useful = addShopItem(itemMap, items, reward.objectId, { event: event.id, kind: "ladder", amount: reward.num }) || useful;
+      }
+    }
+
+    items.clear();
+    for (const treasureBox of eventData.treasureBoxes) {
+      for(const giftItems of treasureBox.treasureBoxGifts) {
+        for (const reward of giftItems.gifts) {
+          useful = addShopItem(itemMap, items, reward.objectId, { event: event.id, kind: "treasure", amount: reward.num }) || useful;
+        }
+      }
+    }
+
+    items.clear();
     for (const warId of eventData.warIds) {
       const war = JSON.parse(await fs.readFile(`${outDir}/war_${warId}.json`, "utf-8")) as War;
       for (const spots of war.spots) {
@@ -512,7 +528,7 @@ const main = async (skipVersionCheck: boolean, skipImageDownload: boolean): Prom
 
   main(skipVersionCheck, skipImageDownload).catch((e: unknown) => {
     if (e instanceof Error && e.stack) e = e.stack;
-    log.error(`${e || "unknown error"}`); // eslint-disable-line @typescript-eslint/restrict-template-expressions
+    log.error(`${e || "unknown error"}`); // eslint-disable-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-base-to-string
     process.exit(1);
   });
 })();

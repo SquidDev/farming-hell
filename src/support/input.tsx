@@ -1,4 +1,4 @@
-import { useFloating, offset, flip, shift } from "@floating-ui/react-dom";
+import { flip, offset, shift, useFloating } from "@floating-ui/react-dom";
 import { Field, type FormikProps, type GenericFieldHTMLAttributes, useField } from "formik";
 import { type FunctionComponent, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import isEqual from "react-fast-compare";
@@ -51,7 +51,7 @@ export const Input: FunctionComponent<{
       {meta.error ? <p className="font-semibold text-red-600 pb-1">{meta.error}</p> : undefined}
       {children}
     </div>}
-  </>
+  </>;
 };
 
 /**

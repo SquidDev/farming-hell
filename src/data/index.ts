@@ -19,7 +19,7 @@ export type GameEvent = {
 export type EventAppearance = {
   event: Id<"event">,
   amount: number,
-  kind: "lottery" | "shop" | "mission" | "quest",
+  kind: "lottery" | "shop" | "mission" | "quest" | "ladder" | "treasure",
 }
 
 export type ItemDrop = {

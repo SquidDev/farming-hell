@@ -66,6 +66,11 @@ const EventAppearances: FunctionComponent<{ item: Item, store: Store }> = observ
       kind = "Shop";
     } else if (x.kind === "quest") {
       kind = "Quest reward";
+    } else if (x.kind === "ladder") {
+      kind = "Ladder";
+    } else if (x.kind === "treasure") {
+      amount = `${x.amount}/box`;
+      kind = "Treasure";
     } else {
       kind = "?";
     }

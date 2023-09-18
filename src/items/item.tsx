@@ -2,7 +2,7 @@ import type { FunctionComponent } from "react";
 
 import type { Store } from "../store";
 import type { Id } from "../data";
-import { classNames, Icon } from "../support/utils";
+import { Icon, classNames } from "../support/utils";
 import { expId, qpId } from "../data/constants";
 
 

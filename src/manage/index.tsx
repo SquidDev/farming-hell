@@ -162,11 +162,8 @@ export const ServantInput: FunctionComponent<{ servant: OwnedServant, store: Sto
   const servantDetails = store.servantLookup.get(storeServant.id);
   const npStyle = npStyles[servantDetails?.npType ?? "arts"];
 
-  const inferredAscension = servantDetails !== undefined ? getAscensionTarget(servantDetails, storeServant) : placeholderOne;
-  const ascension = servantDetails && (
-    (inferredAscension?.current && servantDetails.ascensions[ascensionMapping[inferredAscension.current]])
-    ?? servantDetails.ascensions[0]
-  );
+  const inferredAscension = servantDetails !== undefined ? getAscensionTarget(servantDetails, storeServant) : placeholderZero;
+  const ascension = servantDetails?.ascensions[ascensionMapping[inferredAscension.current ?? 0]];
 
   return <Formik
     initialValues={formServant}
