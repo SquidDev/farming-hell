@@ -62,6 +62,7 @@ exports[`Has a basic list of items 1`] = `
   "6550 => Scale of Fantasy",
   "6553 => Sunscale",
   "6556 => Ether Photon Converger",
+  "6557 => Flower of the End",
   "6507 => Claw of Chaos",
   "6517 => Heart of the Foreign God",
   "6506 => Dragon's Reverse Scale",
@@ -80,6 +81,7 @@ exports[`Has a basic list of items 1`] = `
   "6544 => Fragment of a Twinkling Star",
   "6546 => Fruit of Eternity",
   "6548 => Flaming Oni Lantern Plant",
+  "6558 => Golden Cauldron",
   "6999 => Crystallized Lore",
   "7001 => Saber Piece",
   "7002 => Archer Piece",
@@ -198,8 +200,9 @@ exports[`Includes webcrow IDs 1`] = `
   "312 => ours=105100:'Okita Souji Alter (Saber)' theirs='Okita Soji (Saber Alter)'",
   "318 => ours=704100:'Sei Shounagon (Berserker)' theirs='Sei Shonagon (Berserker)'",
   "321 => ours=404600:'Elisabeth Báthory (Cinderella)' theirs='Elizabeth Bathory (Cinderella)'",
-  "324 => ours=305000:'Sakamoto Ryouma' theirs='Sakamoto Ryoma'",
+  "324 => ours=305000:'Sakamoto Ryouma (Lancer)' theirs='Sakamoto Ryoma'",
   "326 => ours=404300:'Taigong Wang' theirs='Tai Gong Wang'",
-  "330 => ours=1001100:'Manannán mac Lir (Bazett)' theirs='Manannan mac Lir (Bazett)'",
+  "328 => ours=2500900:'Koyanskaya of Dark' theirs='Koyanskaya of Darkness'",
+  "329 => ours=2800200:'Hephaistíon' theirs='Hephaestion'",
 ]
 `;
