@@ -86,7 +86,15 @@ class Converter {
   });
 
   public addServant(jpServant: AtlasServant, naServant?: AtlasServant): void {
-    if (jpServant.type === "enemyCollectionDetail") return;
+    if (jpServant.collectionNo === 0) {
+      log.info(`Skipping ${jpServant.name} (non-collectable)`);
+      return;
+    }
+
+    if (jpServant.type === "enemyCollectionDetail") {
+      log.info(`Skipping ${jpServant.name} (enemy)`);
+      return;
+    }
 
     const originalName = (naServant ?? jpServant).name;
     const name = originalName.replace(/\bAltria\b/, "Artoria");
@@ -224,6 +232,8 @@ const dropNames: Record<string, string> = {
   "Shell of Reminiscense": "Shell of Reminiscence",
   "Demon Flame Lantern": "Oni Flame Lantern",
   "Divine Spirit Particle": "Divine Leyline Spiritron",
+  "Ashes of Remembrance": "Ash of Remembrance",
+  "Scales of Fantasy": "Scale of Fantasy",
 };
 
 const addDropData = (
@@ -245,7 +255,7 @@ const addDropData = (
     const area = row.values[startingColumn + 3].formattedValue;
     const quest = row.values[startingColumn + 4].formattedValue;
     const link = row.values[startingColumn + 4].hyperlink;
-    const ap = row.values[startingColumn + 6].effectiveValue?.numberValue;
+    const ap = row.values[startingColumn + 5].effectiveValue?.numberValue;
     const ap_drop = row.values[startingColumn + 7].effectiveValue?.numberValue;
     const drop = row.values[startingColumn + 9].effectiveValue?.numberValue;
 
@@ -332,7 +342,7 @@ const main = async (skipVersionCheck: boolean, skipImageDownload: boolean): Prom
   if (sheetsKey) {
     // Somewhat incorrect to tie this to the data version, but good enough (TM).
     await getAsFile(
-      `https://sheets.googleapis.com/v4/spreadsheets/1_SlTjrVRTgHgfS7sRqx4CeJMqlz687HdSlYqiW-JvQA?ranges=Best%205%20AP%2FDrop%20%28NA%29&key=${sheetsKey}&fields=sheets`,
+      `https://sheets.googleapis.com/v4/spreadsheets/1_SlTjrVRTgHgfS7sRqx4CeJMqlz687HdSlYqiW-JvQA?ranges=Best%205%20AP%2FDrop%20%28JP%29&key=${sheetsKey}&fields=sheets`,
       `${outDir}/drops.json`, isNew
     );
     // We could fetch https://docs.google.com/spreadsheets/d/1_SlTjrVRTgHgfS7sRqx4CeJMqlz687HdSlYqiW-JvQA/gviz/tq?tqx=out:csv&sheet=Best%205%20AP%2FDrop%20%28NA%29 instead,
@@ -459,7 +469,7 @@ const main = async (skipVersionCheck: boolean, skipImageDownload: boolean): Prom
 
     items.clear();
     for (const treasureBox of eventData.treasureBoxes) {
-      for(const giftItems of treasureBox.treasureBoxGifts) {
+      for (const giftItems of treasureBox.treasureBoxGifts) {
         for (const reward of giftItems.gifts) {
           useful = addShopItem(itemMap, items, reward.objectId, { event: event.id, kind: "treasure", amount: reward.num }) || useful;
         }

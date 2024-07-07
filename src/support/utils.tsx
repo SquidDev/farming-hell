@@ -10,7 +10,7 @@ export const classNames = (...classes: Array<string | undefined>): string => cla
 
 /** Wraps an <img> tag for a specific Atlas Academy icon, preconfiguring the correct width and height. */
 export const Icon: FunctionComponent<{ className?: string, src: string, alt: string, title?: string }> = ({ className, src, alt, title }) =>
-  <img className={className} alt={alt} src={src} title={title} width="128" height="128" />;
+  <img className={className} alt={alt} src={src} title={title} width="128" height="128" loading="lazy" />;
 
 
 // I love Tailwind, but still haven't figured out the right way to do sane styling for links.

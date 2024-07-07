@@ -9,6 +9,7 @@ exports[`Ascension and levels infers a servant's ascension correctly 1`] = `
       alt="Artoria Pendragon"
       className="w-20 h-20 squircle"
       height="128"
+      loading="lazy"
       src="/86c499b4e08c60449eee8d3fcb2e07ab.png"
       width="128"
     />
@@ -307,6 +308,7 @@ exports[`Ascension and levels supports mixed ascension and level 1`] = `
       alt="Artoria Pendragon"
       className="w-20 h-20 squircle"
       height="128"
+      loading="lazy"
       src="/fc034d773d3c4e51bce020ffdaa5569b.png"
       width="128"
     />
@@ -605,6 +607,7 @@ exports[`renders the empty servant correctly 1`] = `
       alt="Artoria Pendragon"
       className="w-20 h-20 squircle"
       height="128"
+      loading="lazy"
       src="/86c499b4e08c60449eee8d3fcb2e07ab.png"
       width="128"
     />

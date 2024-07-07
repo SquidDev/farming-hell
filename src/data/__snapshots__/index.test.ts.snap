@@ -2,8 +2,8 @@
 
 exports[`Has a basic list of items 1`] = `
 [
-  "1 => QP",
   "9770400 => Blaze of Wisdom",
+  "1 => QP",
   "6001 => Gem of Saber",
   "6002 => Gem of Archer",
   "6003 => Gem of Lancer",
@@ -35,8 +35,8 @@ exports[`Has a basic list of items 1`] = `
   "6533 => Stake of Wailing Night",
   "6534 => Mystic Gunpowder",
   "6549 => Small Bell of Absolution",
-  "6551 => Twilight Ceremonial Blade",
-  "6552 => Unforgettable Ashes",
+  "6551 => Ceremonial Sword of Twilight",
+  "6552 => Ash of Remembrance",
   "6554 => Obsidian Edge",
   "6555 => Vestige of Madness",
   "6502 => Seed of Yggdrasil",
