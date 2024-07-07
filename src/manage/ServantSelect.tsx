@@ -1,6 +1,6 @@
 import { useField } from "formik";
 import { type FunctionComponent, type ReactNode, useState } from "react";
-import { Combobox } from "@headlessui/react";
+import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from "@headlessui/react";
 
 import { type IdMap, type Servant, makeId } from "../data";
 import { classNames } from "../support/utils";
@@ -23,13 +23,13 @@ const makeServants = (query: string, servants: IdMap<Servant>): ReactNode => {
       if (!matches) return;
     }
 
-    options.push(<Combobox.Option key={servant.id} value={servant} className={({ active, selected }) => classNames(
+    options.push(<ComboboxOption key={servant.id} value={servant} className={({ active, selected }) => classNames(
       "flex items-center p-2",
       selected ? "bg-blue-600" : (active ? "bg-blue-100" : undefined)
     )}>
       <img className="w-8 h-8 mr-1 squircle" alt={servant.name} src={servant.ascensions[0]} width="128" height="128" loading="lazy" />
       <span className="flex-grow">{servant.name} {matchAlias && <span className="text-sm">({matchAlias})</span>}</span>
-    </Combobox.Option>);
+    </ComboboxOption>);
   });
   return options;
 };
@@ -55,21 +55,21 @@ const ServantSelect: FunctionComponent<{ name: string, className: string, servan
 
   return <Combobox value={currentServant} onChange={x => void helpers.setValue(x ? `${x.id}` : "")}>{({ open }) => <>
     <div className={classNames("relative", className)}>
-      <Combobox.Input<Servant | undefined, "input">
+      <ComboboxInput<Servant | undefined, "input">
         onChange={event => setQuery(event.target.value)}
         displayValue={x => x ? x.name : ""}
         onFocus={e => e.target.setSelectionRange(0, e.target.value.length)}
         className="w-full p-1 rounded-lg border focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400"
       />
-      <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+      <ComboboxButton className="absolute inset-y-0 right-0 flex items-center pr-2">
         <Chevron />
-      </Combobox.Button>
+      </ComboboxButton>
     </div>
-    {open && <div className="relative"><Combobox.Options static
+    {open && <div className="relative"><ComboboxOptions static
       className="absolute w-full max-h-64 bg-white overflow-y-auto z-30 border-1 border-gray-400 py-1"
     >
       {makeServants(query, servants)}
-    </Combobox.Options></div>}
+    </ComboboxOptions></div>}
   </>
   }
   </Combobox>;

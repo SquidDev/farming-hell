@@ -1,6 +1,6 @@
 import { type FunctionComponent, type ReactNode, StrictMode, useCallback, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Menu, Tab } from "@headlessui/react";
+import { Menu, MenuButton, MenuItem, MenuItems, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 
 import type { DataDump, Servant } from "./data";
 import ServantInputs from "./manage";
@@ -24,8 +24,8 @@ const tabClassName = ({ selected }: { selected: boolean }): string => {
 
 const MenuWrapper: FunctionComponent<{ title: string, children: ReactNode }> = ({ title, children }) =>
   <Menu as="div" className="relative lg:w-full">
-    <Menu.Button className={classNames("lg:w-full", tabClassName({ selected: false }))}>{title}</Menu.Button>
-    <Menu.Items
+    <MenuButton className={classNames("lg:w-full", tabClassName({ selected: false }))}>{title}</MenuButton>
+    <MenuItems
       as="ul"
       className={classNames(
         "absolute right-0 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 w-56 border-2 border-blue-200",
@@ -34,15 +34,15 @@ const MenuWrapper: FunctionComponent<{ title: string, children: ReactNode }> = (
         "mt-1", // Otherwise pop below (so margin above)
       )}>
       {children}
-    </Menu.Items>
+    </MenuItems>
   </Menu>;
 
-const MenuItem: FunctionComponent<{ active: boolean, children: ReactNode } & JSX.IntrinsicElements["button"]> = ({ active, children, ...props }) =>
+const MenuItemContents: FunctionComponent<{ children: ReactNode } & JSX.IntrinsicElements["button"]> = ({ children, ...props }) =>
   <button
     type="button"
     {...props}
     className={classNames(
-      active ? "bg-blue-100" : "bg-white hover:bg-blue-100",
+      "bg-white hover:bg-blue-100 data-[focus]:bg-blue-100",
       "flex w-full p-2 text-left"
     )}
   >{children}</button>;
@@ -63,8 +63,8 @@ const MainControl: FunctionComponent<{ store: Store }> = ({ store }) => {
   const setDialogueOpen = useCallback((open: boolean) => setDialogue(x => ({ ...x, open })), [setDialogue]);
   const openDialogue = useCallback((r: JSX.Element) => setDialogue({ open: true, contents: r }), [setDialogue]);
 
-  return <Tab.Group as="div" className="flex flex-col gap-2 lg:flex-row lg:gap-4 lg:h-screen">
-    <Tab.List className="bg-blue-500 p-2 flex justify-between gap-2 mb-4 lg:flex-col lg:w-1/5 xl:w-1/6 2xl:max-w-xs lg:h-full">
+  return <TabGroup as="div" className="flex flex-col gap-2 lg:flex-row lg:gap-4 lg:h-screen">
+    <TabList className="bg-blue-500 p-2 flex justify-between gap-2 mb-4 lg:flex-col lg:w-1/5 xl:w-1/6 2xl:max-w-xs lg:h-full">
       <div className="flex lg:flex-col items-start gap-2">
         <Branding servant={artoria} />
         <Tab className={s => classNames("lg:w-full", tabClassName(s))}>Servants</Tab>
@@ -73,28 +73,28 @@ const MainControl: FunctionComponent<{ store: Store }> = ({ store }) => {
 
       <div className="flex lg:flex-col items-start gap-2">
         <MenuWrapper title="Import">
-          <Menu.Item>{({ active }) => <MenuItem active={active} onClick={() => loadFromFile(store, readJson, "application/json")}>Load from JSON</MenuItem>}</Menu.Item>
-          <Menu.Item>{({ active }) => <MenuItem active={active} onClick={() => openDialogue(<ImportWebcrow store={store} setOpen={setDialogueOpen} />)}>Import from FGO Material Simulator</MenuItem>}</Menu.Item>
+          <MenuItem><MenuItemContents onClick={() => loadFromFile(store, readJson, "application/json")}>Load from JSON</MenuItemContents></MenuItem>
+          <MenuItem><MenuItemContents onClick={() => openDialogue(<ImportWebcrow store={store} setOpen={setDialogueOpen} />)}>Import from FGO Material Simulator</MenuItemContents></MenuItem>
         </MenuWrapper>
         <MenuWrapper title="Export">
-          <Menu.Item>{({ active }) => <MenuItem active={active} onClick={() => storeToFile(store, writeJson, "fgo-planner.json", "application/json")}>Save as JSON</MenuItem>}</Menu.Item>
-          <Menu.Item>{({ active }) => <MenuItem active={active} onClick={() => storeToFile(store, writeCsv, "fgo-planner.csv", "text/csv")}>Save as CSV</MenuItem>}</Menu.Item>
-          <Menu.Item>{({ active }) => <MenuItem active={active} onClick={() => openDialogue(<ExportWebcrow store={store} setOpen={setDialogueOpen} />)}>Export Servants to FGO Material Simulator</MenuItem>}</Menu.Item>
+          <MenuItem><MenuItemContents onClick={() => storeToFile(store, writeJson, "fgo-planner.json", "application/json")}>Save as JSON</MenuItemContents></MenuItem>
+          <MenuItem><MenuItemContents onClick={() => storeToFile(store, writeCsv, "fgo-planner.csv", "text/csv")}>Save as CSV</MenuItemContents></MenuItem>
+          <MenuItem><MenuItemContents onClick={() => openDialogue(<ExportWebcrow store={store} setOpen={setDialogueOpen} />)}>Export Servants to FGO Material Simulator</MenuItemContents></MenuItem>
         </MenuWrapper>
         <MenuWrapper title="Help">
-          <Menu.Item>{({ active }) => <MenuItem active={active} onClick={() => openDialogue(<About />)}>About</MenuItem>}</Menu.Item>
-          <Menu.Item>{({ active }) => <MenuItem active={active} onClick={() => openDialogue(<Instructions />)}>Instructions</MenuItem>}</Menu.Item>
+          <MenuItem><MenuItemContents onClick={() => openDialogue(<About />)}>About</MenuItemContents></MenuItem>
+          <MenuItem><MenuItemContents onClick={() => openDialogue(<Instructions />)}>Instructions</MenuItemContents></MenuItem>
         </MenuWrapper>
       </div>
-    </Tab.List>
+    </TabList>
 
-    <Tab.Panels as="div" className="overflow-y-auto lg:pr-4 lg:flex-grow">
-      <Tab.Panel><ServantInputs store={store} openDialogue={openDialogue} /></Tab.Panel>
-      <Tab.Panel><RequirementTable store={store} /></Tab.Panel>
-    </Tab.Panels>
+    <TabPanels as="div" className="overflow-y-auto lg:pr-4 lg:flex-grow">
+      <TabPanel><ServantInputs store={store} openDialogue={openDialogue} /></TabPanel>
+      <TabPanel><RequirementTable store={store} /></TabPanel>
+    </TabPanels>
 
     {<WrappedDialog isOpen={dialogue.open} setOpen={setDialogueOpen} className="max-w-5xl">{dialogue.contents}</WrappedDialog>}
-  </Tab.Group>;
+  </TabGroup>;
 };
 
 const Document: FunctionComponent = function Document() {

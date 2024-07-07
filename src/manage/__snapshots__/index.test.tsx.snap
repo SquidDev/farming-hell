@@ -283,6 +283,25 @@ exports[`Ascension and levels infers a servant's ascension correctly 1`] = `
         </div>
       </div>
     </div>
+    <span
+      hidden={true}
+      style={
+        {
+          "borderWidth": "0",
+          "clip": "rect(0, 0, 0, 0)",
+          "display": "none",
+          "height": 0,
+          "left": 1,
+          "margin": -1,
+          "overflow": "hidden",
+          "padding": 0,
+          "position": "fixed",
+          "top": 1,
+          "whiteSpace": "nowrap",
+          "width": 1,
+        }
+      }
+    />
     <div
       className="mt-2"
     >
@@ -582,6 +601,25 @@ exports[`Ascension and levels supports mixed ascension and level 1`] = `
         </div>
       </div>
     </div>
+    <span
+      hidden={true}
+      style={
+        {
+          "borderWidth": "0",
+          "clip": "rect(0, 0, 0, 0)",
+          "display": "none",
+          "height": 0,
+          "left": 1,
+          "margin": -1,
+          "overflow": "hidden",
+          "padding": 0,
+          "position": "fixed",
+          "top": 1,
+          "whiteSpace": "nowrap",
+          "width": 1,
+        }
+      }
+    />
     <div
       className="mt-2"
     >
@@ -879,6 +917,25 @@ exports[`renders the empty servant correctly 1`] = `
         </div>
       </div>
     </div>
+    <span
+      hidden={true}
+      style={
+        {
+          "borderWidth": "0",
+          "clip": "rect(0, 0, 0, 0)",
+          "display": "none",
+          "height": 0,
+          "left": 1,
+          "margin": -1,
+          "overflow": "hidden",
+          "padding": 0,
+          "position": "fixed",
+          "top": 1,
+          "whiteSpace": "nowrap",
+          "width": 1,
+        }
+      }
+    />
     <div
       className="mt-2"
     >

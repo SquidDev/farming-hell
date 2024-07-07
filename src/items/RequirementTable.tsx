@@ -3,7 +3,7 @@ import { type FunctionComponent, type ReactNode, type Reducer, useCallback, useM
 import * as yup from "yup";
 import { Formik } from "formik";
 import { action } from "mobx";
-import { Disclosure, Tab } from "@headlessui/react";
+import { Disclosure, DisclosureButton, DisclosurePanel, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 
 import type { Store } from "../store";
 import { type Item, Priority } from "../data";
@@ -165,10 +165,10 @@ const RequiredItem: FunctionComponent<{
         <tr>
           <SubmitOnChange formik={form} />
           <td className="min-w-max">
-            <Disclosure.Button className="w-full text-left flex items-center">
+            <DisclosureButton className="w-full text-left flex items-center">
               <Icon className="w-12 h-12 inline-block mr-1" alt={item.name} src={item.icon} />
               {item.name}
-            </Disclosure.Button>
+            </DisclosureButton>
           </td>
           <td>
             <Input name={"count"} className="w-12 p-1 rounded-lg" type="text" inputMode="numeric" pattern="[0-9]*">
@@ -180,22 +180,22 @@ const RequiredItem: FunctionComponent<{
           <ValueWithNeeded owned={ownedVal} needed={highPriority + mediumPriority} value={mediumPriority} />
           <ValueWithNeeded owned={ownedVal} needed={highPriority + mediumPriority + lowPriority} value={lowPriority} />
         </tr>
-        <Disclosure.Panel as="tr">
+        <DisclosurePanel as="tr">
           <td colSpan={6}>
-            <Tab.Group>
-              <Tab.List className="flex gap-2">
+            <TabGroup>
+              <TabList className="flex gap-2">
                 <Tab className={tabClassName}>Servants</Tab>
                 <Tab className={tabClassName}>Events</Tab>
                 <Tab className={tabClassName}>Farming Locations</Tab>
-              </Tab.List>
-              <Tab.Panels>
-                <Tab.Panel><ReverseDeps getter={getter} store={store} /></Tab.Panel>
-                <Tab.Panel><EventAppearances item={item} store={store} /></Tab.Panel>
-                <Tab.Panel><Drops item={item} /></Tab.Panel>
-              </Tab.Panels>
-            </Tab.Group>
+              </TabList>
+              <TabPanels>
+                <TabPanel><ReverseDeps getter={getter} store={store} /></TabPanel>
+                <TabPanel><EventAppearances item={item} store={store} /></TabPanel>
+                <TabPanel><Drops item={item} /></TabPanel>
+              </TabPanels>
+            </TabGroup>
           </td>
-        </Disclosure.Panel>
+        </DisclosurePanel>
       </Disclosure>
     }
   </Formik>;

@@ -1,54 +1,26 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, type FunctionComponent, type ReactNode } from "react";
+import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
+import type { FunctionComponent, ReactNode } from "react";
 
 import { classNames } from "./utils";
 
 const WrappedDialog: FunctionComponent<{ isOpen: boolean, setOpen: (open: boolean) => void, className?: string, children: ReactNode }> = ({ isOpen, setOpen, className, children }) =>
-  <Transition appear show={isOpen} as={Fragment}>
-    <Dialog
-      as="div"
-      className="fixed inset-0 z-10 overflow-y-auto"
-      onClose={() => setOpen(false)}
-    >
-      <div className="min-h-screen px-4 text-center">
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <Dialog.Overlay className="fixed inset-0 bg-opacity-80 bg-black" />
-        </Transition.Child>
-
-        {/* This element is to trick the browser into centering the modal contents. */}
-        <span
-          className="inline-block h-screen align-middle"
-          aria-hidden="true"
-        >
-          &#8203;
-        </span>
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0 scale-95"
-          enterTo="opacity-100 scale-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100 scale-100"
-          leaveTo="opacity-0 scale-95"
-        >
-          <div className={classNames(
-            "inline-block w-full p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl",
-            className,
-          )}>
-            {children}
-          </div>
-        </Transition.Child>
-      </div>
-    </Dialog>
-  </Transition>;
+  <Dialog
+    as="div"
+    className="fixed inset-0 z-10 overflow-y-auto transition duration-300 ease-out data-[closed]:opacity-0"
+    open={isOpen}
+    onClose={() => setOpen(false)}
+    transition
+  >
+    <DialogBackdrop transition className="fixed inset-0 bg-opacity-80 bg-black" />
+    <div className="relative inset-0 flex w-screen items-center justify-center p-4">
+      <DialogPanel className={classNames(
+        "inline-block w-full p-6 my-8 overflow-hidden text-left align-middle bg-white shadow-xl rounded-2xl",
+        className,
+      )}>
+        {children}
+      </DialogPanel>
+    </div>
+  </Dialog>;
 
 export default WrappedDialog;
 
