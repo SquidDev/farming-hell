@@ -41,6 +41,8 @@ class Converter {
   public itemMap: IdMap<Item> = new Map();
   public servants: Array<Servant> = [];
 
+  public servantAliases: Map<number, { name: string, aliases: string[] }>;
+
   constructor(expGrowth: Array<number>) {
     this.expGrowth = expGrowth;
 
@@ -56,6 +58,11 @@ class Converter {
       events: [],
       drops: [],
     });
+
+    // Additional servant ids
+    this.servantAliases = new Map<number, { name: string, aliases: string[] }>([
+      [3300200, { name: "Ereshkigal", aliases: ["Space Ereshkigal", "Summer Ereshkigal"] }]
+    ]);
   }
 
   public addItem(item: AtlasItem, alwaysDisplay: boolean | undefined = undefined): void {
@@ -106,10 +113,20 @@ class Converter {
     if (originalName !== name) aliases.add(originalName);
     aliases.delete(name);
 
+    const additionalAliases = this.servantAliases.get(jpServant.id);
+    if (additionalAliases !== undefined) {
+      this.servantAliases.delete(jpServant.id)
+      if (additionalAliases.name !== name) {
+        log.error(`Mismatched name for servant ${jpServant.id} (called ${name}, but alias uses ${additionalAliases.name})`)
+      } else {
+        for (const alias of additionalAliases.aliases) aliases.add(alias);
+      }
+    }
+
     const skills: Array<Array<Skill>> = [[], [], []];
     const seenSkills = new Set<Id<"skill">>();
 
-    const appendSkills: Array<Array<Skill>> = [[], [], []];
+    const appendSkills: Array<Array<Skill>> = [[], [], [], [], []];
 
     if (naServant) {
       for (const skill of naServant.skills) {
@@ -262,7 +279,7 @@ const addDropData = (
     if (!area || !quest || !link || typeof ap !== "number" || typeof ap_drop !== "number" || typeof drop !== "number") {
       // Don't warn if we're just an empty row.
       if (area && quest && area !== "Area" && quest !== "Quest") {
-        log.warn(`Invalid drops for ${currentItem.name}, skipping.`);
+        log.warn(`Invalid drops for ${currentItem.name}.`);
       }
       continue;
     }
@@ -371,6 +388,8 @@ const main = async (skipVersionCheck: boolean, skipImageDownload: boolean): Prom
   for (const servant of mergedServants.values()) converter.addServant(servant.jp, servant.na);
   const { servants, itemMap } = converter;
 
+  for (const { name } of converter.servantAliases.values()) log.warn(`"Unprocessed servant alias ${name}`);
+
   // Find all events which occur after now and sort them by how soon they are. Also skip 80038 (i.e. Solomon).
   // TODO: We probably should do this filter in the app too.
   const now = Date.now();
@@ -385,8 +404,14 @@ const main = async (skipVersionCheck: boolean, skipImageDownload: boolean): Prom
   for (const servant of servants) {
     tasks.push(async () => {
       for (let i = 0; i < servant.ascensions.length; i++) {
-        servant.ascensions[i] = await downloadImage(seenImages, servant.ascensions[i], skipImageDownload);
+        try {
+          servant.ascensions[i] = await downloadImage(seenImages, servant.ascensions[i], skipImageDownload);
+        } catch (e) {
+          log.error(`Cannot download ascension #${i} artwork for ${servant.name}.`)
+          console.error(e);
+        }
       }
+
       for (const skills of servant.skills) {
         for (const skill of skills) skill.icon = await downloadImage(seenImages, skill.icon, skipImageDownload);
       }

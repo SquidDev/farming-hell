@@ -63,6 +63,7 @@ export const getAsFile = async (url: string, path: string, force = false): Promi
 
     get(url, result => {
       if (result.statusCode !== 200) {
+        result.destroy();
         reject(new Error(`Expected ${url} to return 200, got ${result.statusCode ?? "error"}`));
         return;
       }

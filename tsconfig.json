@@ -19,6 +19,8 @@
 
     "forceConsistentCasingInFileNames": true,
 
+    "skipLibCheck": true,
+
     // Needed for wdyr
     "allowSyntheticDefaultImports": true,
   },
