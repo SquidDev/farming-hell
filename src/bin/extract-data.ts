@@ -349,11 +349,14 @@ const main = async (skipVersionCheck: boolean, skipImageDownload: boolean): Prom
 
   // Fetch data if available
   log.step("Fetching data");
-  await getAsFile("https://api.atlasacademy.io/export/JP/nice_servant_lang_en.json", `${outDir}/servants_jp.json`, isNew);
-  await getAsFile("https://api.atlasacademy.io/export/NA/nice_servant.json", `${outDir}/servants_na.json`, isNew);
-  await getAsFile("https://api.atlasacademy.io/export/JP/basic_event_lang_en.json", `${outDir}/events_jp.json`, isNew);
-  await getAsFile("https://api.atlasacademy.io/export/NA/nice_item.json", `${outDir}/items_na.json`, isNew);
-  await getAsFile("https://api.atlasacademy.io/export/JP/NiceSvtGrailCost.json", `${outDir}/grail_jp.json`, isNew);
+  await runTasksInParallel([
+    () => getAsFile("https://api.atlasacademy.io/export/JP/nice_servant_lang_en.json", `${outDir}/servants_jp.json`, isNew),
+    () => getAsFile("https://api.atlasacademy.io/export/NA/nice_servant.json", `${outDir}/servants_na.json`, isNew),
+    () => getAsFile("https://api.atlasacademy.io/export/JP/basic_event_lang_en.json", `${outDir}/events_jp.json`, isNew),
+    () => getAsFile("https://api.atlasacademy.io/export/JP/nice_war_lang_en.json", `${outDir}/wars_jp.json`, isNew),
+    () => getAsFile("https://api.atlasacademy.io/export/NA/nice_item.json", `${outDir}/items_na.json`, isNew),
+    () => getAsFile("https://api.atlasacademy.io/export/JP/NiceSvtGrailCost.json", `${outDir}/grail_jp.json`, isNew),
+  ]);
 
   const sheetsKey = process.env.SHEETS_KEY;
   if (sheetsKey) {
@@ -374,6 +377,7 @@ const main = async (skipVersionCheck: boolean, skipImageDownload: boolean): Prom
   const naServants = JSON.parse(await fs.readFile(`${outDir}/servants_na.json`, "utf-8")) as Array<AtlasServant>;
   const jpServants = JSON.parse(await fs.readFile(`${outDir}/servants_jp.json`, "utf-8")) as Array<AtlasServant>;
   const events = JSON.parse(await fs.readFile(`${outDir}/events_jp.json`, "utf-8")) as Array<EventSummary>;
+  const wars = JSON.parse(await fs.readFile(`${outDir}/wars_jp.json`, "utf-8")) as Array<War>;
   const items = JSON.parse(await fs.readFile(`${outDir}/items_na.json`, "utf-8")) as Array<AtlasItem>;
   const grailCost = JSON.parse(await fs.readFile(`${outDir}/grail_jp.json`, "utf-8")) as AtlasGrailCost;
   const expGrowth = jpServants[0].expGrowth;
@@ -427,18 +431,8 @@ const main = async (skipVersionCheck: boolean, skipImageDownload: boolean): Prom
   recomputeFgoSimIds(servants);
 
   // Download all additional data about events.
-  const wars = new Set<Id<"war">>();
   for (const event of events) {
-    tasks.push(async () => {
-      await getAsFile(`https://api.atlasacademy.io/nice/JP/event/${event.id}?lang=en`, `${outDir}/event_${event.id}.json`);
-      const eventData = JSON.parse(await fs.readFile(`${outDir}/event_${event.id}.json`, "utf-8")) as AtlasEvent;
-      for (const war of eventData.warIds) {
-        if (!wars.has(war)) {
-          wars.add(war);
-          tasks.push(() => getAsFile(`https://api.atlasacademy.io/nice/JP/war/${war}?lang=en`, `${outDir}/war_${war}.json`));
-        }
-      }
-    });
+    tasks.push(() => getAsFile(`https://api.atlasacademy.io/nice/JP/event/${event.id}?lang=en`, `${outDir}/event_${event.id}.json`));
   }
 
   log.step("Downloading events and images");
@@ -503,7 +497,12 @@ const main = async (skipVersionCheck: boolean, skipImageDownload: boolean): Prom
 
     items.clear();
     for (const warId of eventData.warIds) {
-      const war = JSON.parse(await fs.readFile(`${outDir}/war_${warId}.json`, "utf-8")) as War;
+      const war = wars.find(x => x.id == warId);
+      if (!war) {
+        log.error(`Cannot find war ${warId} for event ${event.name}`);
+        continue;
+      }
+
       for (const spots of war.spots) {
         for (const quest of spots.quests) {
           for (const gift of quest.gifts) {
