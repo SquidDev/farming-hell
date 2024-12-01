@@ -28,7 +28,7 @@ export type ItemDrop = {
   link: string,
   ap: number,
   ap_drop: number,
-  drop: number,
+  drop?: number,
 }
 
 export type Item = Item_ & {

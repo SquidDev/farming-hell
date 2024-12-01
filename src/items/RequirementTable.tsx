@@ -108,7 +108,7 @@ const Drops: FunctionComponent<{ item: Item }> = observer(({ item }) => {
     <td className="py-2 px-1"><ExternalLink href={drop.link}>{drop.quest}</ExternalLink></td>
     <td className="py-2 px-1 text-right">{drop.ap.toFixed(2)}</td>
     <td className="py-2 px-1 text-right">{drop.ap_drop.toFixed(2)}</td>
-    <td className="py-2 px-1 text-right">{drop.drop.toFixed(2)}%</td>
+    <td className="py-2 px-1 text-right">{drop.drop === undefined ? "" : `${drop.drop.toFixed(2)}%`}</td>
   </tr>);
 
   return <>

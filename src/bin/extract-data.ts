@@ -276,7 +276,7 @@ const addDropData = (
     const ap_drop = row.values[startingColumn + 7].effectiveValue?.numberValue;
     const drop = row.values[startingColumn + 9].effectiveValue?.numberValue;
 
-    if (!area || !quest || !link || typeof ap !== "number" || typeof ap_drop !== "number" || typeof drop !== "number") {
+    if (!area || !quest || !link || typeof ap !== "number" || typeof ap_drop !== "number") {
       // Don't warn if we're just an empty row.
       if (area && quest && area !== "Area" && quest !== "Quest") {
         log.warn(`Invalid drops for ${currentItem.name}.`);
