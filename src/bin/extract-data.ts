@@ -251,6 +251,8 @@ const dropNames: Record<string, string> = {
   "Divine Spirit Particle": "Divine Leyline Spiritron",
   "Ashes of Remembrance": "Ash of Remembrance",
   "Scales of Fantasy": "Scale of Fantasy",
+  "Sunscale": "Solar Hide",
+  "Obsidian Edge": "Obsidian Blade",
 };
 
 const addDropData = (
