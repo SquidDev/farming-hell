@@ -57,7 +57,7 @@ export const getAsFile = async (url: string, path: string, force = false): Promi
   log.info(`Downloading ${url} to ${path}`);
   await new Promise((resolve, reject) => {
     const doReject = async (e: unknown): Promise<void> => {
-      await fs.unlink(path);
+      try { await fs.unlink(path); } catch (e) { log.warn(`Not deleting ${path}: ${e}`) }
       reject(e);
     };
 

@@ -1,7 +1,7 @@
 import { createHash } from "crypto";
 import { promises as fs } from "fs";
 
-import type { DataDump, EventAppearance, GameEvent, Item, Servant } from "../data";
+import type { CardColour, DataDump, EventAppearance, GameEvent, Item, Servant } from "../data";
 import type { AtlasEvent, AtlasGrailCost, AtlasItem, AtlasServant, EventSummary, War } from "../data/atlas";
 import { type Id, type IdMap, type Skill, type UpgradeItem, type UpgradeRequirements, makeId } from "../data/common";
 import { expId, grailId, qpId } from "../data/constants";
@@ -159,13 +159,22 @@ class Converter {
       appendSkillMaterials.unshift({ items: [this.convertUpgradeItem(upgrade)], qp: 0 });
     }
 
+    const card = jpServant.noblePhantasms?.[0].card;
+    let npType: CardColour;
+    switch (card) {
+      case "1": npType = "arts"; break;
+      case "2": npType = "buster"; break;
+      case "3": npType = "quick"; break;
+      default: throw Error(`Unknown card colour ${card} for ${jpServant.name}`);
+    }
+
     const details: Servant = {
       id: jpServant.id,
       webcrowId: jpServant.collectionNo,
       name,
       aliases: [...aliases],
       rarity: jpServant.rarity,
-      npType: jpServant.noblePhantasms?.[0].card,
+      npType,
       coin: this.convertItemId(jpServant.coin.item),
 
       // Atlas provides materials in objects. We convert these to arrays.
