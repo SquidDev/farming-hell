@@ -79,7 +79,7 @@ const EventAppearances: FunctionComponent<{ item: Item, store: Store }> = observ
     return <tr key={`${x.event}:${x.kind}`} className="whitespace-nowrap">
       <td className="py-2 px-1 text-right">{amount}</td>
       <td className="py-2 px-1">{kind}</td>
-      <td className="py-2 px-1 max-w-xs overflow-ellipsis overflow-hidden" title={event.name}>{event.name}</td>
+      <td className="py-2 px-1 max-w-xs text-ellipsis overflow-hidden" title={event.name}>{event.name}</td>
       <td className="py-2 px-1">{event.date}</td>
     </tr>;
   });

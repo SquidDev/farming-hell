@@ -6,7 +6,7 @@ import { classNames } from "./utils";
 const WrappedDialog: FunctionComponent<{ isOpen: boolean, setOpen: (open: boolean) => void, className?: string, children: ReactNode }> = ({ isOpen, setOpen, className, children }) =>
   <Dialog
     as="div"
-    className="fixed inset-0 z-10 overflow-y-auto transition duration-300 ease-out data-[closed]:opacity-0"
+    className="fixed inset-0 z-10 overflow-y-auto transition duration-300 ease-out data-closed:opacity-0"
     open={isOpen}
     onClose={() => setOpen(false)}
     transition
@@ -32,7 +32,7 @@ export const DialogButton: FunctionComponent<JSX.IntrinsicElements["button"]> =
       type="button"
       className={classNames(
         "inline-flex justify-center px-4 py-2 text-sm font-medium border border-transparent rounded-md",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+        "focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2",
         className ?? "hover:bg-blue-200 text-blue-900 bg-blue-100 focus-visible:ring-blue-500"
       )}
       {...attrs}

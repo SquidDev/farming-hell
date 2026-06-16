@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Has a basic list of items 1`] = `
 [
@@ -65,6 +65,7 @@ exports[`Has a basic list of items 1`] = `
   "6557 => Flower of the End",
   "6559 => Universal Cube",
   "6561 => Divine Lens",
+  "6564 => 創生の真珠",
   "6507 => Claw of Chaos",
   "6517 => Heart of the Foreign God",
   "6506 => Dragon's Reverse Scale",
@@ -87,6 +88,7 @@ exports[`Has a basic list of items 1`] = `
   "6560 => Moonlight Nucleus",
   "6562 => Holy Water of Destiny",
   "6563 => Reliquary of Departed Souls",
+  "6565 => 黎溟琥珀",
   "6999 => Crystallized Lore",
   "7001 => Saber Piece",
   "7002 => Archer Piece",

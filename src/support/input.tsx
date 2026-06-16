@@ -30,7 +30,7 @@ export const Input: FunctionComponent<{
       name={name}
       innerRef={context.refs.setReference}
       className={classNames(
-        "border focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400",
+        "border bg-white focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400",
         classes,
         meta.error ? "border-red-600" : "border-gray-300"
       )}
@@ -40,7 +40,7 @@ export const Input: FunctionComponent<{
     />
     {isOpen && <div
       ref={context.refs.setFloating}
-      className="z-50 bg-gray-900 bg-opacity-80 text-white text-xs w-max max-w-lg p-2 rounded"
+      className="z-50 bg-gray-900 bg-opacity-80 text-white text-xs w-max max-w-lg p-2 rounded-sm"
       style={{
         position: context.strategy,
         left: context.x ?? 0,
@@ -80,7 +80,7 @@ export const Checkbox: FunctionComponent<GenericFieldHTMLAttributes> = ({ childr
   <label className="flex items-center space-x-3">
     <Field
       type="checkbox"
-      className="checked:form-tick appearance-none h-6 w-6 border border-gray-300 rounded-md checked:bg-blue-600 checked:border-transparent focus:outline-none"
+      className="checked:form-tick appearance-none h-6 w-6 border border-gray-300 rounded-md checked:bg-blue-600 checked:border-transparent focus:outline-hidden"
       {...props} />
     <span className="text-gray-900 font-medium">{children}</span>
   </label>;

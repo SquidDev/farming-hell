@@ -176,11 +176,11 @@ export const ServantInput: FunctionComponent<{ servant: OwnedServant, store: Sto
           ? <Icon className="w-20 h-20 squircle" src={ascension} alt={servantDetails.name} />
           : undefined}
 
-        <div className="w-full flex flex-col flex-grow justify-center">
+        <div className="w-full flex flex-col grow justify-center">
           <ServantSelect name="id" className="mb-1" servants={store.servantLookup} />
           <Field
             name="priority" component="select"
-            className="bg-white p-1 rounded-lg border focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400"
+            className="bg-white p-1 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400"
           >{priorities}</Field>
         </div>
 
@@ -193,7 +193,7 @@ export const ServantInput: FunctionComponent<{ servant: OwnedServant, store: Sto
         >⣿</div>}
       </div>
 
-      <div className="flex flex-col flex-grow">
+      <div className="flex flex-col grow">
         <div className="flex flex-row flex-wrap mt-2 gap-2 2xl:gap-1">
           <LevelOrAscensionInput successStyle={npStyle.success} label="Level" path="level" servant={servantDetails} placeholder={placeholderOne} />
           <LevelOrAscensionInput

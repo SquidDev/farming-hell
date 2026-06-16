@@ -54,11 +54,11 @@ export const Import: FunctionComponent<{ store: Store, setOpen: (open: boolean) 
         <li>Click &ldquo;Load&rdquo;</li>
       </ul>
       {store.ownedServants.length > 0 &&
-        <div className="p-2 bg-yellow-300 text-yellow-900 border border-yellow-600 rounded-sm">
+        <div className="p-2 bg-yellow-300 text-yellow-900 border border-yellow-600 rounded-xs">
           <strong>Warning:</strong> This will overwrite any existing servants.
         </div>}
       {error &&
-        <div className="p-2 bg-red-300 text-red-900 border border-red-600 rounded-sm">
+        <div className="p-2 bg-red-300 text-red-900 border border-red-600 rounded-xs">
           <strong>Error loading data:</strong> {error}
         </div>}
       <textarea

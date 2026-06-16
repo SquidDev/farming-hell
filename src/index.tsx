@@ -42,7 +42,7 @@ const MenuItemContents: FunctionComponent<{ children: ReactNode } & JSX.Intrinsi
     type="button"
     {...props}
     className={classNames(
-      "bg-white hover:bg-blue-100 data-[focus]:bg-blue-100",
+      "bg-white hover:bg-blue-100 data-focus:bg-blue-100",
       "flex w-full p-2 text-left"
     )}
   >{children}</button>;
@@ -88,7 +88,7 @@ const MainControl: FunctionComponent<{ store: Store }> = ({ store }) => {
       </div>
     </TabList>
 
-    <TabPanels as="div" className="overflow-y-auto lg:pr-4 lg:flex-grow">
+    <TabPanels as="div" className="overflow-y-auto lg:pr-4 lg:grow">
       <TabPanel><ServantInputs store={store} openDialogue={openDialogue} /></TabPanel>
       <TabPanel><RequirementTable store={store} /></TabPanel>
     </TabPanels>

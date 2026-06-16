@@ -28,7 +28,7 @@ const makeServants = (query: string, servants: IdMap<Servant>): ReactNode => {
       selected ? "bg-blue-600" : (active ? "bg-blue-100" : undefined)
     )}>
       <img className="w-8 h-8 mr-1 squircle" alt={servant.name} src={servant.ascensions[0]} width="128" height="128" loading="lazy" />
-      <span className="flex-grow">{servant.name} {matchAlias && <span className="text-sm">({matchAlias})</span>}</span>
+      <span className="grow">{servant.name} {matchAlias && <span className="text-sm">({matchAlias})</span>}</span>
     </ComboboxOption>);
   });
   return options;
@@ -59,14 +59,14 @@ const ServantSelect: FunctionComponent<{ name: string, className: string, servan
         onChange={event => setQuery(event.target.value)}
         displayValue={x => x ? x.name : ""}
         onFocus={e => e.target.setSelectionRange(0, e.target.value.length)}
-        className="w-full p-1 rounded-lg border focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400"
+        className="bg-white w-full p-1 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400"
       />
       <ComboboxButton className="absolute inset-y-0 right-0 flex items-center pr-2">
         <Chevron />
       </ComboboxButton>
     </div>
     {open && <div className="relative"><ComboboxOptions static
-      className="absolute w-full max-h-64 bg-white overflow-y-auto z-30 border-1 border-gray-400 py-1"
+      className="absolute w-full max-h-64 bg-white overflow-y-auto z-30 border border-gray-400 py-1"
     >
       {makeServants(query, servants)}
     </ComboboxOptions></div>}

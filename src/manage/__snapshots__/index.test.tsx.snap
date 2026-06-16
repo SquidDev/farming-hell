@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Ascension and levels infers a servant's ascension correctly 1`] = `
 [
@@ -14,11 +14,11 @@ exports[`Ascension and levels infers a servant's ascension correctly 1`] = `
       width="128"
     />
     <div
-      className="w-full flex flex-col flex-grow justify-center"
+      className="w-full flex flex-col grow justify-center"
     >
       <ServantSelect />
       <select
-        className="bg-white p-1 rounded-lg border focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400"
+        className="bg-white p-1 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400"
         name="priority"
         onBlur={[Function]}
         onChange={[Function]}
@@ -48,7 +48,7 @@ exports[`Ascension and levels infers a servant's ascension correctly 1`] = `
     </div>
   </div>,
   <div
-    className="flex flex-col flex-grow"
+    className="flex flex-col grow"
   >
     <div
       className="flex flex-row flex-wrap mt-2 gap-2 2xl:gap-1"
@@ -332,11 +332,11 @@ exports[`Ascension and levels supports mixed ascension and level 1`] = `
       width="128"
     />
     <div
-      className="w-full flex flex-col flex-grow justify-center"
+      className="w-full flex flex-col grow justify-center"
     >
       <ServantSelect />
       <select
-        className="bg-white p-1 rounded-lg border focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400"
+        className="bg-white p-1 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400"
         name="priority"
         onBlur={[Function]}
         onChange={[Function]}
@@ -366,7 +366,7 @@ exports[`Ascension and levels supports mixed ascension and level 1`] = `
     </div>
   </div>,
   <div
-    className="flex flex-col flex-grow"
+    className="flex flex-col grow"
   >
     <div
       className="flex flex-row flex-wrap mt-2 gap-2 2xl:gap-1"
@@ -650,11 +650,11 @@ exports[`renders the empty servant correctly 1`] = `
       width="128"
     />
     <div
-      className="w-full flex flex-col flex-grow justify-center"
+      className="w-full flex flex-col grow justify-center"
     >
       <ServantSelect />
       <select
-        className="bg-white p-1 rounded-lg border focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400"
+        className="bg-white p-1 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-400"
         name="priority"
         onBlur={[Function]}
         onChange={[Function]}
@@ -684,7 +684,7 @@ exports[`renders the empty servant correctly 1`] = `
     </div>
   </div>,
   <div
-    className="flex flex-col flex-grow"
+    className="flex flex-col grow"
   >
     <div
       className="flex flex-row flex-wrap mt-2 gap-2 2xl:gap-1"

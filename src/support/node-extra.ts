@@ -1,8 +1,6 @@
-import { Agent as HttpsAgent, get as httpsGet } from "https";
-import { ClientRequest, Agent as HttpAgent, IncomingMessage, get as httpGet } from "http";
 import { promises as fs } from "fs";
-import { StringDecoder } from "string_decoder";
 import { spawn } from "child_process";
+import { Readable } from "stream";
 
 const logMsg = (colour: string, level: string) => (message: string): void => {
   const fullLevel = " ".repeat(5 - level.length) + level;
@@ -26,51 +24,61 @@ export const fileExists = async (path: string): Promise<boolean> => {
   }
 };
 
-const httpAgent = new HttpAgent({ keepAlive: true });
-const httpsAgent = new HttpsAgent({ keepAlive: true });
+const requestOptions: RequestInit = {
+  headers: { "user-agent": "SquidDev/farming-hell" },
+};
 
-const get = (url: string | URL, callback?: (res: IncomingMessage) => void): ClientRequest => {
-  const isHttps = url instanceof URL ? url.protocol === "https" : url.startsWith("https://");
-  return isHttps ? httpsGet(url, { agent: httpsAgent }, callback) : httpGet(url, { agent: httpAgent }, callback);
+/** Format an error message to a string. */
+const formatError = (e: unknown): string => {
+  if (e instanceof AggregateError) {
+    return e.errors.map(x => formatError(x)).join(", ");
+  } else if (e instanceof Error) {
+    return `${e.name}: ${e.message}`;
+  } else {
+    return `${e}`;
+  }
+}
+
+const get = async (url: string | URL): Promise<Response> => {
+  for (var i = 0; i < 4; i++) {
+    try {
+      return await fetch(url, requestOptions)
+    } catch (e) {
+      log.warn(`${formatError(e)}. Retrying`);
+    }
+  }
+
+  return await fetch(url, requestOptions)
 };
 
 /** Download a remote URL and return it as a string. */
-export const getAsString = (url: string): Promise<string> => new Promise((resolve, reject) => get(url, result => {
-  if (result.statusCode !== 200) {
-    reject(new Error(`Expected ${url} to return 200, got ${result.statusCode ?? "error"}`));
-    return;
+export const getAsString = async (url: string): Promise<string> => {
+  const result = await get(url);
+  if (result.status !== 200) {
+    throw new Error(`Expected ${url} to return 200, got ${result.status ?? "error"}`);
   }
 
-  const builder = new StringDecoder("utf-8");
-  let body = "";
-  result.on("data", chunk => body += builder.write(chunk as Buffer));
-  result.on("end", () => {
-    body += builder.end();
-    resolve(body);
-  });
-}).on("error", e => reject(e)));
+  return await result.text()
+};
 
 /** Download a remote URL and save it to a file. This skips downloading if the file already exists, unless "force" is passed. */
 export const getAsFile = async (url: string, path: string, force = false): Promise<void> => {
   if (await fileExists(path) && !force) return;
 
   log.info(`Downloading ${url} to ${path}`);
-  await new Promise((resolve, reject) => {
-    const doReject = async (e: unknown): Promise<void> => {
-      try { await fs.unlink(path); } catch (e) { log.warn(`Not deleting ${path}: ${e}`) }
-      reject(e);
-    };
-
-    get(url, result => {
-      if (result.statusCode !== 200) {
-        result.destroy();
-        reject(new Error(`Expected ${url} to return 200, got ${result.statusCode ?? "error"}`));
-        return;
+  const result = await get(url);
+  try {
+    if (result.status !== 200) {
+        throw new Error(`Expected ${url} to return 200, got ${result.status ?? "error"}`);
       }
 
-      fs.writeFile(path, result).then(resolve, doReject);
-    }).on("error", e => void doReject(e));
-  });
+      if(result.body === null) throw new Error(`Response to ${url} has no body`);
+
+      await fs.writeFile(path, Readable.fromWeb(result.body as any));
+  } catch(e) {
+    try { await fs.unlink(path); } catch (e) { log.warn(`Not deleting ${path}: ${e}`) }
+    throw e;
+  }
 };
 
 /** Run a command and wait for it to finish. */
