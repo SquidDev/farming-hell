@@ -27,5 +27,5 @@ export const ownedServant: yup.Schema<Omit<OwnedServant, "uid">> = yup.object().
   level: target("Level", 1, 120),
   ascension: target("Ascension", 0, 4),
   skills: yup.array().of(target("Skill", 1, 10)).length(3).required(),
-  appendSkills: yup.array().of(target("Append Skill", 0, 10)).length(3).required(),
+  appendSkills: yup.array().of(target("Append Skill", 0, 10)).length(5).required(),
 });

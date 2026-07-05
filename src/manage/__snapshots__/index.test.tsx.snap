@@ -281,6 +281,56 @@ exports[`Ascension and levels infers a servant's ascension correctly 1`] = `
             </div>
           </div>
         </div>
+        <div
+          className="rounded-md"
+        >
+          <div
+            className="flex flex-col p-2"
+          >
+            <span
+              className="text-xl"
+            >
+               
+               
+            </span>
+            <div
+              className="flex"
+            >
+              <Input
+                placeholder="0"
+                value=""
+              />
+              <Input
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="rounded-md"
+        >
+          <div
+            className="flex flex-col p-2"
+          >
+            <span
+              className="text-xl"
+            >
+               
+               
+            </span>
+            <div
+              className="flex"
+            >
+              <Input
+                placeholder="0"
+                value=""
+              />
+              <Input
+                value=""
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <span
@@ -599,6 +649,56 @@ exports[`Ascension and levels supports mixed ascension and level 1`] = `
             </div>
           </div>
         </div>
+        <div
+          className="rounded-md"
+        >
+          <div
+            className="flex flex-col p-2"
+          >
+            <span
+              className="text-xl"
+            >
+               
+               
+            </span>
+            <div
+              className="flex"
+            >
+              <Input
+                placeholder="0"
+                value=""
+              />
+              <Input
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="rounded-md"
+        >
+          <div
+            className="flex flex-col p-2"
+          >
+            <span
+              className="text-xl"
+            >
+               
+               
+            </span>
+            <div
+              className="flex"
+            >
+              <Input
+                placeholder="0"
+                value=""
+              />
+              <Input
+                value=""
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <span
@@ -840,6 +940,56 @@ exports[`renders the empty servant correctly 1`] = `
       <div
         className="flex flex-wrap gap-2 2xl:gap-1"
       >
+        <div
+          className="rounded-md"
+        >
+          <div
+            className="flex flex-col p-2"
+          >
+            <span
+              className="text-xl"
+            >
+               
+               
+            </span>
+            <div
+              className="flex"
+            >
+              <Input
+                placeholder="0"
+                value=""
+              />
+              <Input
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="rounded-md"
+        >
+          <div
+            className="flex flex-col p-2"
+          >
+            <span
+              className="text-xl"
+            >
+               
+               
+            </span>
+            <div
+              className="flex"
+            >
+              <Input
+                placeholder="0"
+                value=""
+              />
+              <Input
+                value=""
+              />
+            </div>
+          </div>
+        </div>
         <div
           className="rounded-md"
         >

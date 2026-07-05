@@ -216,6 +216,8 @@ export const ServantInput: FunctionComponent<{ servant: OwnedServant, store: Sto
             <SkillInput successStyle={npStyle.success} path={"appendSkills[0]"} skill={servantDetails?.appendSkills[0]} placeholder={placeholderZero} />
             <SkillInput successStyle={npStyle.success} path={"appendSkills[1]"} skill={servantDetails?.appendSkills[1]} placeholder={placeholderZero} />
             <SkillInput successStyle={npStyle.success} path={"appendSkills[2]"} skill={servantDetails?.appendSkills[2]} placeholder={placeholderZero} />
+            <SkillInput successStyle={npStyle.success} path={"appendSkills[3]"} skill={servantDetails?.appendSkills[3]} placeholder={placeholderZero} />
+            <SkillInput successStyle={npStyle.success} path={"appendSkills[4]"} skill={servantDetails?.appendSkills[4]} placeholder={placeholderZero} />
           </div>
         </div>
 

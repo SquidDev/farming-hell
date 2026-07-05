@@ -44,7 +44,8 @@ const readImpl = (store: Store, data: Schemas): void => {
   }
 
   const fixedServants = servants.map(servant => {
-    servant.appendSkills ??= [{}, {}, {}];
+    servant.appendSkills ??= [{}, {}, {}, {}, {}];
+    if (servant.appendSkills.length === 3) servant.appendSkills.push({}, {});
     return servant as OwnedServant;
   });
 
